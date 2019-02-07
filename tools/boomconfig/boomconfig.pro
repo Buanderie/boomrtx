@@ -27,12 +27,12 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     settingsdialog.cpp \
-    ../../mcu/tx/crc16.cpp
+    ../../common/src/crc16.cpp
 
 HEADERS += \
         mainwindow.h \
     settingsdialog.h \
-    ../../mcu/tx/frame.h
+    ../../common/include/frame.h
 
 FORMS += \
         mainwindow.ui \

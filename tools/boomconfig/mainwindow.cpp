@@ -1,10 +1,26 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "../../mcu/tx/frame.h"
+#include "../../common/include/frame.h"
+#include "../../common/include/frameparser.h"
 
 #include <QMessageBox>
 #include <QDebug>
+
+#include <iomanip>
+#include <iostream>
+
+void print_bytes(std::ostream& out, const char *title, const unsigned char *data, size_t dataLen, bool format = true, int symbol_per_line = 64 ) {
+    out << title << std::endl;
+    out << std::setfill('0');
+    for(size_t i = 0; i < dataLen; ++i) {
+        out << std::hex << std::setw(2) << (int)data[i];
+        if (format) {
+            out << (((i + 1) % symbol_per_line == 0) ? "\n" : " ");
+        }
+    }
+    out << std::endl;
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -74,12 +90,25 @@ void MainWindow::handleError(QSerialPort::SerialPortError error)
 void MainWindow::serialPing()
 {
     uint8_t buffer[ 512 ];
-    if( _isConnected )
+    // if( _isConnected )
     {
-        Frame pingFrame = createPingFrame();
+//        Frame pingFrame = createPongFrame( (uint8_t)(rand() % 256) );
+        Frame pingFrame = createPongFrame( 0x77 );
         int bsize = frameToBuffer( pingFrame, buffer, 512 );
         qDebug() << "bsize=" << bsize;
-        _serial->write( (const char*)buffer, bsize );
+        print_bytes( std::cerr, "pute", (const unsigned char*)buffer, bsize );
+//        _serial->write( (const char*)buffer, bsize );
+
+        // Parser test
+        FrameParser fp;
+//        buffer[ bsize - 1 ] = 0xff;
+        for( int i = 0; i < bsize; ++i )
+        {
+            if( fp.addByte( buffer[i] ) )
+            {
+                qDebug() << "Succesfully decoded frame !" << endl;
+            }
+        }
     }
 }
 
