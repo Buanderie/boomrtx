@@ -31,7 +31,7 @@ FrameParser radioFrameParser;
 
 // TX Device Default Settings
 uint8_t __device_id = 0x01;
-uint8_t __device_type = 0x01;
+uint8_t __device_type = 0x00;
 uint8_t __radioChannel = 0x00;
 uint8_t __radioPower = 0x00;
 
@@ -69,7 +69,7 @@ void loop2() {
   }
   else
   {
-    yield();
+    Scheduler.delay(50);
   }
 }
 
@@ -82,7 +82,6 @@ if (Serial.available()) {
     if( configFrameParser.addByte( c ) )
     {
       Frame f = configFrameParser.getFrame();
-
       // If received PING, send PONG
       if( f.opcode == 0x00 )
       {
@@ -90,9 +89,12 @@ if (Serial.available()) {
         Frame pongFrame = createPongFrame( __device_id, __device_type );
         int bsize = frameToBuffer( pongFrame, buf, 32 );
         Serial.write( buf, bsize );
-        yield();
       }
     }
+    yield();
 }
+else
+{
   yield();
+}
 }
