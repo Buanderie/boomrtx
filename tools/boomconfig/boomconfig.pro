@@ -27,13 +27,21 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
     settingsdialog.cpp \
-    ../../common/src/crc16.cpp
+    ../../common/crc16.cpp \
+    ledindicator.cpp \
+    propertyframe.cpp
 
 HEADERS += \
         mainwindow.h \
     settingsdialog.h \
-    ../../common/include/frame.h
+    ../../common/frame.h \
+    ledindicator.h \
+    propertyframe.h \
+    ../../common/frame.h \
+    ../../common/frameparser.h \
+    linkquality.h
 
 FORMS += \
         mainwindow.ui \
-    settingsdialog.ui
+    settingsdialog.ui \
+    propertyframe.ui

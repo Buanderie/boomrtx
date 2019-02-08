@@ -11,16 +11,20 @@ using namespace std;
 //
 #include <frame.h>
 #include <frameparser.h>
+#include <circularbuffer.h>
+
+#include <commcontroller.h>
 
 // VALIDATION VECTORS
 unsigned char valid_ping[] = { 0xbe, 0x00, 0x00, 0x00, 0x00, 0x00, 0xef };
 int valid_ping_size = 7;
 
-// be 00 01 01 77 71 0a ef
-unsigned char valid_pong[] = { 0xbe, 0x00, 0x01, 0x01, 0x77, 0x71, 0x0a, 0xef };
-int valid_pong_size = 8;
+// be 00 01 02 77 00 1a 89 ef
+unsigned char valid_pong[] = { 0xbe, 0x00, 0x01, 0x02, 0x77, 0x01, 0x3b, 0x99, 0xef };
+int valid_pong_size = 9;
 
 int Factorial( int number ) {
+    CommController<16> cc;
    return number <= 1 ? number : Factorial( number - 1 ) * number;  // fail
 // return number <= 1 ? 1      : Factorial( number - 1 ) * number;  // pass
 }
@@ -52,7 +56,7 @@ TEST_CASE( "PONG frames are well formed", "[protocol]" ) {
 
     int numErrors = 0;
     uint8_t buffer[ 512 ];
-    Frame pongFrame = createPongFrame(0x77);
+    Frame pongFrame = createPongFrame(0x77, 0x01);
     int bsize = frameToBuffer( pongFrame, buffer, 512 );
     if( bsize != valid_pong_size )
     {
@@ -75,7 +79,7 @@ TEST_CASE( "Invalid CRCs are detected by parser", "[protocol]" ) {
     int numValidFrame = 0;
     for( int k = 0; k < 20; ++k )
     {
-        Frame pongFrame = createPongFrame(0x77);
+        Frame pongFrame = createPongFrame(0x77, 0x00);
         int bsize = frameToBuffer( pongFrame, buffer, 512 );
         buffer[ bsize - 1 ] = 0x00;
         for( int i = 0; i < bsize; ++i )
@@ -118,7 +122,7 @@ TEST_CASE( "All valid PONGs are detected by parser", "[protocol]" ) {
     const int numFrames = 2000;
     for( int k = 0; k < numFrames; ++k )
     {
-        Frame pongFrame = createPongFrame( rand() % 256 );
+        Frame pongFrame = createPongFrame( rand() % 256, 0x01 );
         int bsize = frameToBuffer( pongFrame, buffer, 512 );
         for( int i = 0; i < bsize; ++i )
         {

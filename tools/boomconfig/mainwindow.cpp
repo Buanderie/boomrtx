@@ -1,8 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "../../common/include/frame.h"
-#include "../../common/include/frameparser.h"
+#include "../../common/frame.h"
+#include "../../common/frameparser.h"
 
 #include <QMessageBox>
 #include <QDebug>
@@ -28,16 +28,33 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     _isConnected = false;
+    notifySerialLinkConnection( _isConnected );
 
     _serial = new QSerialPort(this);
     _settings = new SettingsDialog(this);
 
     _pingTimer = new QTimer(this);
     connect(_pingTimer, SIGNAL(timeout()), this, SLOT(serialPing()));
-    _pingTimer->start(1000);
+    _pingTimer->start(200);
 
     connect(_serial, &QSerialPort::readyRead, this, &MainWindow::readData);
     connect(_serial, &QSerialPort::errorOccurred, this, &MainWindow::handleError);
+    _parser = (void*)(new FrameParser());
+
+    // Properties
+    ui->deviceId->setLabelText( "ID" );
+    ui->deviceType->setLabelText( "Device Type" );
+    ui->deviceTxPower->setLabelText( "Radio TX Power");
+    ui->deviceChannel->setLabelText("Radio Channel\n[1 - 127]");
+
+    ui->deviceId->setValueText("-");
+    ui->deviceType->setValueText("-");
+    ui->deviceTxPower->setValueText("-");
+    ui->deviceChannel->setValueText("-");
+
+    // Properties connections
+    connect(ui->deviceId, &PropertyFrame::valueUpdated, this, &MainWindow::onDeviceIDUpdate);
+
 }
 
 MainWindow::~MainWindow()
@@ -74,12 +91,28 @@ void MainWindow::on_actionConnect_triggered()
         QMessageBox::critical(this, tr("Error"), _serial->errorString());
         _isConnected = false;
     }
+    notifySerialLinkConnection( _isConnected );
+
 }
 
 void MainWindow::readData()
 {
     const QByteArray data = _serial->readAll();
-    qDebug() << data.toStdString().c_str();
+
+    //    qDebug() << "DATA ??? ";
+    //    qDebug() << "SIZE=" << data.size();
+
+    FrameParser * fp = (FrameParser*)_parser;
+    for( int k = 0; k < data.size(); ++k )
+    {
+        if( fp->addByte(data.at(k) ) )
+        {
+            //            qDebug() << "RECEIVED VALIDFRAME!";
+            Frame ff = fp->getFrame();
+            //            qDebug() << "OPCODE = " << (int)ff.opcode;
+            processFrame( ff.opcode, ff.payload, ff.payload_size );
+        }
+    }
 }
 
 void MainWindow::handleError(QSerialPort::SerialPortError error)
@@ -92,23 +125,82 @@ void MainWindow::serialPing()
     uint8_t buffer[ 512 ];
     // if( _isConnected )
     {
-//        Frame pingFrame = createPongFrame( (uint8_t)(rand() % 256) );
-        Frame pingFrame = createPongFrame( 0x77 );
+        //        Frame pingFrame = createPongFrame( (uint8_t)(rand() % 256) );
+        Frame pingFrame = createPingFrame();
         int bsize = frameToBuffer( pingFrame, buffer, 512 );
-        qDebug() << "bsize=" << bsize;
-        print_bytes( std::cerr, "pute", (const unsigned char*)buffer, bsize );
-//        _serial->write( (const char*)buffer, bsize );
-
-        // Parser test
-        FrameParser fp;
-//        buffer[ bsize - 1 ] = 0xff;
-        for( int i = 0; i < bsize; ++i )
+        if( _isConnected )
         {
-            if( fp.addByte( buffer[i] ) )
+            _serial->write( (const char*)buffer, bsize );
+            _qual.pushPing();
+            double quality = _qual.quality();
+            ui->qualityValue->setText( QString::number( quality * 100.0, 10, 1 ) + QString("%") );
+            if( quality > 0.95 )
             {
-                qDebug() << "Succesfully decoded frame !" << endl;
+                notifySerialLinkQuality(true);
             }
+            else
+                notifySerialLinkQuality(false);
         }
     }
 }
 
+void MainWindow::notifySerialLinkConnection(bool value)
+{
+    ui->serialLinkLed->setState(value);
+    if( value )
+    {
+        ui->serialLinkLabel->setText( tr("Connected") );
+    }
+    else
+    {
+        ui->serialLinkLabel->setText( tr("Not Connected") );
+    }
+}
+
+void MainWindow::notifySerialLinkQuality(bool value)
+{
+    ui->serialQualityLed->setState( value );
+}
+
+void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size )
+{
+    switch( opcode )
+    {
+
+    case 0x01: // PONG
+    {
+        qDebug() << "Received PONG from device ID=" << (int)payload[0];
+        _qual.pushPong();
+        ui->deviceId->setValueText( QString::number( (int)payload[0], 16 ).toUpper() );
+        uint8_t device_type = payload[ 1 ];
+        QString deviceTypeStr = tr("UNKWOWN");
+        if( device_type == 0x00 )
+        {
+            deviceTypeStr = tr("EMITTER");
+        }
+        else if( device_type == 0x01 )
+        {
+            deviceTypeStr = tr("RECEIVER");
+        }
+        ui->deviceType->setValueText(deviceTypeStr);
+        break;
+    }
+
+    default:
+        break;
+
+    }
+}
+
+
+void MainWindow::on_actionDisconnect_triggered()
+{
+    _isConnected = false;
+    _serial->close();
+    notifySerialLinkConnection(_isConnected);
+}
+
+void MainWindow::onDeviceIDUpdate(QString &valueStr)
+{
+    qDebug() << "Need to update DEVICE_ID";
+}

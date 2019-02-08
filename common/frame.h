@@ -55,12 +55,13 @@ Frame createPingFrame( uint8_t flags = 0x00 )
     return ret;
 }
 
-Frame createPongFrame( uint8_t device_id, uint8_t flags = 0x00 )
+Frame createPongFrame( uint8_t device_id, uint8_t device_type, uint8_t flags = 0x00 )
 {
     Frame ret;
     ret.flags = flags;
-    ret.payload_size = 1;
+    ret.payload_size = 2;
     ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = device_type;
     ret.opcode = OP_PONG;
     return ret;
 }

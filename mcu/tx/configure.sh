@@ -10,3 +10,7 @@ rm $SCRIPT_DIR/*.cpp
 # SCoop
 cp $SCRIPT_DIR/../common/SCoop/SchedulerARMAVR/*.h .
 cp $SCRIPT_DIR/../common/SCoop/SchedulerARMAVR/*.cpp .
+
+# Copy common source code
+cp $SCRIPT_DIR/../../common/*.h .
+cp $SCRIPT_DIR/../../common/*.cpp .
