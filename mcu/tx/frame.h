@@ -2,6 +2,7 @@
 #define FRAME_H__
 
 #include "crc16.h"
+#include "protocol.h"
 
 #define FRAME_START_SYMBOL 0xBE
 #define FRAME_END_SYMBOL 0xEF
@@ -17,12 +18,6 @@ typedef struct
     uint8_t 	payload[ FRAME_MAX_PAYLOAD_SIZE ];
     uint16_t  	crc;
 } Frame;
-
-typedef enum
-{
-    OP_PING = 0,
-    OP_PONG
-} OpCode;
 
 Frame createFrame( uint8_t opcode, uint8_t flags, uint8_t* payload, size_t payload_size, bool encryption = false )
 {
@@ -66,6 +61,80 @@ Frame createPongFrame( uint8_t device_id, uint8_t device_type, uint8_t flags = 0
     return ret;
 }
 
+Frame createSetDeviceIdFrame( uint8_t device_id, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 1;
+    ret.payload[ 0 ] = device_id;
+    ret.opcode = OP_SET_DEVICE_ID;
+    return ret;
+}
+
+Frame createGetRadioChannelFrame( uint8_t device_id, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 1;
+    ret.payload[ 0 ] = device_id;
+    ret.opcode = OP_GET_RADIO_CHANNEL;
+    return ret;
+}
+
+Frame createSetDeviceChannelFrame( uint8_t device_id, uint8_t radio_channel, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 2;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = radio_channel;
+    ret.opcode = OP_SET_RADIO_CHANNEL;
+    return ret;
+}
+
+Frame createRadioChannelAckFrame( uint8_t device_id, uint8_t radio_channel, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 2;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = radio_channel;
+    ret.opcode = OP_RADIO_CHANNEL_ACK;
+    return ret;
+}
+
+Frame createGetRadioPowerFrame( uint8_t device_id, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 1;
+    ret.payload[ 0 ] = device_id;
+    ret.opcode = OP_GET_RADIO_POWER;
+    return ret;
+}
+
+Frame createSetDevicePowerFrame( uint8_t device_id, uint8_t radio_power, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 2;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = radio_power;
+    ret.opcode = OP_SET_RADIO_POWER;
+    return ret;
+}
+
+Frame createRadioPowerAckFrame( uint8_t device_id, uint8_t radio_power, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 2;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = radio_power;
+    ret.opcode = OP_RADIO_POWER_ACK;
+    return ret;
+}
+
 size_t frameToBuffer( Frame& f, uint8_t* buffer, size_t bufferSize )
 {
     int offset = 0;
@@ -96,6 +165,7 @@ size_t frameToBuffer( Frame& f, uint8_t* buffer, size_t bufferSize )
         return offset;
 
     }
+    return 0;
 }
 
 #endif

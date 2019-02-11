@@ -59,7 +59,7 @@ void setup() {
   // Add "loop2" and "loop3" to scheduling.
   // "loop" is always started by default.
   Scheduler.startLoop(loop2);
-  Scheduler.startLoop(loop3);
+  // Scheduler.startLoop(loop3);
   Scheduler.startLoop(loop4);
   
 }
@@ -67,11 +67,7 @@ void setup() {
 // Task no.1: Send PINGs into the AIIIIR
 void loop() {
 
-  uint8_t buf[ 32 ];
-  Frame pongFrame = createPingFrame( __device_type );
-  int bsize = frameToBuffer( pongFrame, buf, 32 );
-  Serial1.write( buf, bsize );
-  Scheduler.delay(100);
+  Scheduler.delay(1000);
   yield();
   
 }
@@ -102,8 +98,8 @@ void activityBlink()
 
 // Task no.3: accept commands from CONFIG serial port
 void loop3() {
-  
 while (Serial.available()) {
+    activityBlink();
     char c = Serial.read();
     if( configFrameParser.addByte( c ) )
     {
@@ -158,25 +154,33 @@ while (Serial.available()) {
     yield();
   }
 }
-yield();
 }
 
 // Task no.3: accept commands from CONFIG serial port
 void loop4() {
 
 while (Serial1.available()) {
-    // activityBlink();
+  
+    activityBlink();
     char c = Serial1.read();
+    // Serial1.write( c );
+    
     if( configFrameParser.addByte( c ) )
     {
+      uint8_t buf[ 32 ];
       Frame f = configFrameParser.getFrame();
-      if( f.opcode == OP_PONG )
+      
+      // If received PING, send PONG
+      if( f.opcode == OP_PING )
       {
-        digitalWrite(led1, HIGH);
+        Frame pongFrame = createPongFrame( __device_id, __device_type );
+        int bsize = frameToBuffer( pongFrame, buf, 32 );
+        // Serial1.write( buf, bsize );
+        Serial1.write( 0x77 );
       }
-    }
-    Serial1.write( c );
+  }
+  // yield();
 }
-Scheduler.delay(100);
-// yield();
+// Scheduler.delay(100);
+yield();
 }

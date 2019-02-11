@@ -6,7 +6,7 @@
 class LinkQuality
 {
 public:
-    LinkQuality( int horizon = 50 )
+    LinkQuality( int horizon = 20 )
         :_horizon(horizon)
     {
 

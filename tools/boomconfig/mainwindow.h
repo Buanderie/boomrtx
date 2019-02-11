@@ -36,7 +36,9 @@ private slots:
 
     void on_actionDisconnect_triggered();
 
-    void onDeviceIDUpdate( QString& valueStr );
+    void onDeviceIDUpdate( const QString& valueStr );
+    void onDeviceChannelUpdate( const QString& valueStr );
+    void onDevicePowerUpdate( const QString& valueStr );
 
 private:
     Ui::MainWindow *ui;
@@ -49,12 +51,21 @@ private:
 
     QTimer * _pingTimer = nullptr;
     void* _parser;
+    int frameIdx;
+
+    // Device information
+    int _deviceId;
 
     // PING/PONG stats
     LinkQuality _qual;
 
     void processFrame(int opcode, uint8_t* payload , size_t payload_size);
+    void requestRadioChannel();
+    void requestRadioPower();
 
+    void setDeviceId(uint8_t deviceId);
+    void setDeviceChannel(uint8_t deviceChannel);
+    void setDevicePower(uint8_t devicePower);
 };
 
 #endif // MAINWINDOW_H
