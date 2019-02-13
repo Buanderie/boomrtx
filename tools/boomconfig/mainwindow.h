@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QSerialPort>
+#include <QtSerialPort/QSerialPort>
 #include <QTimer>
 
 #include "settingsdialog.h"
@@ -57,7 +57,7 @@ private:
     int _deviceId;
 
     // PING/PONG stats
-    LinkQuality _qual;
+    LinkQuality<30> _qual;
 
     void processFrame(int opcode, uint8_t* payload , size_t payload_size);
     void requestRadioChannel();
