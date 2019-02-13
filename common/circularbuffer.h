@@ -140,5 +140,5 @@ private:
 #endif
 };
 
-#include "circularbuffer.tpp"
+#include "circularbuffer__.h"
 #endif

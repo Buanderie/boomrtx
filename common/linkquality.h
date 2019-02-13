@@ -1,13 +1,27 @@
 #ifndef LINKQUALITY_H
 #define LINKQUALITY_H
 
-#include <deque>
+#include <stdint.h>
+#include <stddef.h>
 
+// #define USE_DEQUE
+
+#ifdef USE_DEQUE
+#include <deque>
+#else
+#include "circularbuffer.h"
+#endif
+
+template< size_t S >
 class LinkQuality
 {
 public:
-    LinkQuality( int horizon = 20 )
+#ifdef USE_DEQUE
+    LinkQuality( int horizon = S )
         :_horizon(horizon)
+    #else
+    LinkQuality()
+#endif
     {
 
     }
@@ -19,14 +33,22 @@ public:
 
     void pushPing()
     {
+#ifdef USE_DEQUE
         _pushes.push_back( 0 );
         trim( _horizon );
+#else
+        _pushes.push( 0 );
+#endif
     }
 
     void pushPong()
     {
+#ifdef USE_DEQUE
         _pushes.push_back( 1 );
         trim( _horizon );
+#else
+        _pushes.push( 1 );
+#endif
     }
 
     double quality()
@@ -37,7 +59,11 @@ public:
     }
 
 private:
+#ifdef USE_DEQUE
     std::deque< int > _pushes;
+#else
+
+#endif
     void count( double& ping, double& pong )
     {
         ping = 0;
@@ -53,6 +79,7 @@ private:
         }
     }
 
+#ifdef USE_DEQUE
     void trim( int horizon )
     {
         while( _pushes.size() > horizon )
@@ -60,8 +87,15 @@ private:
             _pushes.pop_back();
         }
     }
-
     int _horizon;
+#else
+    CircularBuffer< int, S > _pushes;
+#endif
+
+    void reset()
+    {
+        _pushes.clear();
+    }
 
 protected:
 
