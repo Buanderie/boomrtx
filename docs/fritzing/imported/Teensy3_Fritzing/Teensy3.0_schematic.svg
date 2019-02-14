@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="svg" xmlns:xml="http://www.w3.org/XML/1998/namespace"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="658.413px" height="258px"
+	 viewBox="0 39.665 658.413 258" enable-background="new 0 39.665 658.413 258" xml:space="preserve">
+<sodipodi:namedview  showgrid="true" pagecolor="#ffffff" objecttolerance="10" id="namedview4708" guidetolerance="10" gridtolerance="10" borderopacity="1" bordercolor="#666666" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" units="mm">
+	
+		<inkscape:grid  id="grid4736" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" units="mm" type="xygrid" visible="true" spacingy="1mm" enabled="true" empspacing="10" spacingx="1mm" snapvisiblegridlinesonly="true">
+		</inkscape:grid>
+</sodipodi:namedview>
+<line id="line4482-70-2" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="302.898" y1="275.465" x2="302.898" y2="240.031"/>
+<line id="connector28pin" fill="none" stroke="#000000" stroke-width="1" x1="302.898" y1="275.464" x2="302.898" y2="250.661"/>
+<line id="line4482-70" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="161.165" y1="275.465" x2="161.165" y2="240.031"/>
+<line id="line4482-74" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="125.733" y1="275.464" x2="125.733" y2="240.031"/>
+<line id="line4482-4" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="90.299" y1="275.464" x2="90.299" y2="240.031"/>
+<line id="line4482-56" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="550.929" y1="62.866" x2="550.929" y2="98.299"/>
+<line id="line4482-06" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="515.496" y1="62.866" x2="515.496" y2="98.299"/>
+<line id="line4482-3" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="480.063" y1="62.866" x2="480.063" y2="98.299"/>
+<line id="line4482-1" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="444.63" y1="62.866" x2="444.63" y2="98.299"/>
+<line id="line4482-214" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="409.197" y1="62.866" x2="409.197" y2="98.299"/>
+<line id="line4482-21" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="373.764" y1="62.866" x2="373.764" y2="98.299"/>
+<line id="line4482-05" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="338.33" y1="62.866" x2="338.33" y2="98.299"/>
+<line id="line4482-2" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="302.898" y1="62.866" x2="302.898" y2="98.299"/>
+<line id="line4482-5" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="267.464" y1="62.866" x2="267.464" y2="98.299"/>
+<line id="line4482-8" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="232.031" y1="62.866" x2="232.031" y2="98.299"/>
+<line id="line4482-0" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="196.598" y1="62.866" x2="196.598" y2="98.299"/>
+<line id="line4482-78" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="161.165" y1="62.866" x2="161.165" y2="98.299"/>
+<line id="line4482-7" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="125.733" y1="62.866" x2="125.733" y2="98.299"/>
+<g id="g4410" transform="translate(104.5259,-19.535959)">
+	<text id="text4714" transform="matrix(1 0 0 1 111.9787 194.9014)" font-family="'ArialMT'" font-size="22.475">Teensy 3.0</text>
+</g>
+<line id="line4482" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="90.299" y1="62.866" x2="90.299" y2="98.299"/>
+<rect id="rect4765" x="57.433" y="98.299" fill="none" stroke="#000000" stroke-width="1.731" width="514.756" height="141.732"/>
+<line id="connector1pin" fill="none" stroke="#000000" x1="125.733" y1="62.866" x2="125.733" y2="87.669"/>
+<line id="connector2pin" fill="none" stroke="#000000" stroke-width="1" x1="161.165" y1="62.866" x2="161.165" y2="87.669"/>
+<line id="connector3pin" fill="none" stroke="#000000" stroke-width="1" x1="196.598" y1="62.866" x2="196.598" y2="87.669"/>
+<line id="connector4pin" fill="none" stroke="#000000" stroke-width="1" x1="232.031" y1="62.866" x2="232.031" y2="87.669"/>
+<line id="connector5pin" fill="none" stroke="#000000" stroke-width="1" x1="267.464" y1="62.866" x2="267.464" y2="87.669"/>
+<line id="connector6pin" fill="none" stroke="#000000" stroke-width="1" x1="302.898" y1="62.866" x2="302.898" y2="87.669"/>
+<line id="connector7pin" fill="none" stroke="#000000" stroke-width="1" x1="338.33" y1="62.866" x2="338.33" y2="87.669"/>
+<line id="connector8pin" fill="none" stroke="#000000" stroke-width="1" x1="373.764" y1="62.866" x2="373.764" y2="87.669"/>
+<line id="connector9pin" fill="none" stroke="#000000" stroke-width="1" x1="409.197" y1="62.866" x2="409.197" y2="87.669"/>
+<line id="connector10pin" fill="none" stroke="#000000" stroke-width="1" x1="444.63" y1="62.866" x2="444.63" y2="87.669"/>
+<line id="connector11pin" fill="none" stroke="#000000" stroke-width="1" x1="480.063" y1="62.866" x2="480.063" y2="87.669"/>
+<line id="connector12pin" fill="none" stroke="#000000" stroke-width="1" x1="515.496" y1="62.866" x2="515.496" y2="87.669"/>
+<line id="connector13pin" fill="none" stroke="#000000" stroke-width="1" x1="550.929" y1="62.866" x2="550.929" y2="87.669"/>
+<line id="connector22pin" fill="none" stroke="#000000" stroke-width="1" x1="90.299" y1="275.464" x2="90.299" y2="250.661"/>
+<line id="connector23pin" fill="none" stroke="#000000" stroke-width="1" x1="125.733" y1="275.464" x2="125.733" y2="250.661"/>
+<line id="connector24pin" fill="none" stroke="#000000" stroke-width="1" x1="161.165" y1="275.464" x2="161.165" y2="250.661"/>
+<line id="connector0pin" fill="none" stroke="#000000" stroke-width="1" x1="90.299" y1="62.866" x2="90.299" y2="87.669"/>
+<g id="text3475">
+	<text id="tspan3477" transform="matrix(1 0 0 1 83.2102 117.8127)" font-family="'ArialMT'" font-size="12">Vin</text>
+</g>
+<g id="text3475-7">
+	<text id="tspan3477-4" transform="matrix(1 0 0 1 107.6541 117.6682)" font-family="'ArialMT'" font-size="12">AGND</text>
+</g>
+<g id="text3475-2">
+	<text id="tspan3477-5" transform="matrix(1 0 0 1 154.0764 117.8127)" font-family="'ArialMT'" font-size="12">3.3V</text>
+</g>
+<g id="text3475-1">
+	<text id="tspan3477-3" transform="matrix(1 0 0 1 189.51 117.8127)" font-family="'ArialMT'" font-size="12">23</text>
+</g>
+<g id="text3475-6">
+	<text id="tspan3477-8" transform="matrix(1 0 0 1 224.9426 117.8127)" font-family="'ArialMT'" font-size="12">22</text>
+</g>
+<g id="text3475-74">
+	<text id="tspan3477-9" transform="matrix(1 0 0 1 260.3762 117.8127)" font-family="'ArialMT'" font-size="12">21</text>
+</g>
+<g id="text3475-24">
+	<text id="tspan3477-45" transform="matrix(1 0 0 1 295.8088 117.8127)" font-family="'ArialMT'" font-size="12">20</text>
+</g>
+<g id="text3475-9">
+	<text id="tspan3477-1" transform="matrix(1 0 0 1 331.2415 117.8127)" font-family="'ArialMT'" font-size="12">19</text>
+</g>
+<g id="text3475-28">
+	<text id="tspan3477-96" transform="matrix(1 0 0 1 366.675 117.8127)" font-family="'ArialMT'" font-size="12">18</text>
+</g>
+<g id="text3475-0">
+	<text id="tspan3477-6" transform="matrix(1 0 0 1 402.1077 117.8127)" font-family="'ArialMT'" font-size="12">17</text>
+</g>
+<g id="text3475-4">
+	<text id="tspan3477-0" transform="matrix(1 0 0 1 437.5413 117.8127)" font-family="'ArialMT'" font-size="12">16</text>
+</g>
+<g id="text3475-94">
+	<text id="tspan3477-54" transform="matrix(1 0 0 1 472.9739 117.8127)" font-family="'ArialMT'" font-size="12">15</text>
+</g>
+<g id="text3475-66">
+	<text id="tspan3477-39" transform="matrix(1 0 0 1 508.4075 117.8127)" font-family="'ArialMT'" font-size="12">14</text>
+</g>
+<g id="text3475-95">
+	<text id="tspan3477-2" transform="matrix(1 0 0 1 540.8401 117.8127)" font-family="'ArialMT'" font-size="12">13</text>
+</g>
+<g id="text3475-13">
+	
+		<text id="tspan3477-09" transform="matrix(0.8621 -0.5067 0.5067 0.8621 548.1897 134.3972)" font-family="'ArialMT'" font-size="12">RST</text>
+	<g id="text3475-13_1_">
+		
+			<text id="tspan3477-09_1_" transform="matrix(0.8621 -0.5067 0.5067 0.8621 548.1897 154.2332)" font-family="'ArialMT'" font-size="12">PRG</text>
+	</g>
+	<g id="text3475-13_2_">
+		
+			<text id="tspan3477-09_2_" transform="matrix(0.8621 -0.5067 0.5067 0.8621 546.929 174.0701)" font-family="'ArialMT'" font-size="12">GND</text>
+	</g>
+	<g id="text3475-13_3_">
+		
+			<text id="tspan3477-09_3_" transform="matrix(0.8621 -0.5067 0.5067 0.8621 546.929 193.9075)" font-family="'ArialMT'" font-size="12">3.3V</text>
+	</g>
+	<g id="text3475-13_4_">
+		
+			<text id="tspan3477-09_4_" transform="matrix(0.8621 -0.5067 0.5067 0.8621 548.1897 213.7434)" font-family="'ArialMT'" font-size="12">VBat</text>
+	</g>
+</g>
+<line id="line4482-70-1" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="196.599" y1="275.465" x2="196.599" y2="240.031"/>
+<line id="connector25pin" fill="none" stroke="#000000" stroke-width="1" x1="196.598" y1="275.465" x2="196.598" y2="250.661"/>
+<line id="line4482-70-6" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="232.031" y1="275.465" x2="232.031" y2="240.031"/>
+<line id="connector26pin" fill="none" stroke="#000000" stroke-width="1" x1="232.031" y1="275.465" x2="232.031" y2="250.661"/>
+<line id="line4482-70-3" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="267.464" y1="275.465" x2="267.464" y2="240.031"/>
+<line id="connector27pin" fill="none" stroke="#000000" stroke-width="1" x1="267.464" y1="275.465" x2="267.464" y2="250.661"/>
+<line id="line4482-70-39" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="338.33" y1="275.465" x2="338.33" y2="240.031"/>
+<line id="connector29pin" fill="none" stroke="#000000" stroke-width="1" x1="338.33" y1="275.465" x2="338.33" y2="250.661"/>
+<line id="line4482-70-4" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="373.764" y1="275.465" x2="373.764" y2="240.031"/>
+<line id="connector30pin" fill="none" stroke="#000000" stroke-width="1" x1="373.764" y1="275.464" x2="373.764" y2="250.661"/>
+<line id="line4482-70-41" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="409.197" y1="275.465" x2="409.197" y2="240.031"/>
+<line id="connector31pin" fill="none" stroke="#000000" stroke-width="1" x1="409.197" y1="275.464" x2="409.197" y2="250.661"/>
+<line id="line4482-70-12" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="444.629" y1="275.465" x2="444.629" y2="240.031"/>
+<line id="connector32pin" fill="none" stroke="#000000" stroke-width="1" x1="444.629" y1="275.464" x2="444.629" y2="250.661"/>
+<line id="line4482-70-391" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="480.063" y1="275.465" x2="480.063" y2="240.031"/>
+<line id="connector33pin" fill="none" stroke="#000000" stroke-width="1" x1="480.063" y1="275.464" x2="480.063" y2="250.661"/>
+<line id="line4482-70-8" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="515.496" y1="275.465" x2="515.496" y2="240.031"/>
+<line id="connector34pin" fill="none" stroke="#000000" stroke-width="1" x1="515.496" y1="275.464" x2="515.496" y2="250.661"/>
+<line id="line4482-70-5" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="550.929" y1="275.465" x2="550.929" y2="240.031"/>
+<line id="connector35pin" fill="none" stroke="#000000" stroke-width="1" x1="550.929" y1="275.464" x2="550.929" y2="250.661"/>
+<g id="text3475-10">
+	<text id="tspan3477-41" transform="matrix(1 0 0 1 83.2102 229.4006)" font-family="'ArialMT'" font-size="12">GND</text>
+</g>
+<g id="text3475-7-1">
+	<text id="tspan3477-4-8" transform="matrix(1 0 0 1 117.8313 229.4006)" font-family="'ArialMT'" font-size="12">0</text>
+</g>
+<g id="text3475-2-6">
+	<text id="tspan3477-5-4" transform="matrix(1 0 0 1 154.0764 229.4006)" font-family="'ArialMT'" font-size="12">1</text>
+</g>
+<g id="text3475-1-3">
+	<text id="tspan3477-3-4" transform="matrix(1 0 0 1 189.51 229.4006)" font-family="'ArialMT'" font-size="12">2</text>
+</g>
+<g id="text3475-6-7">
+	<text id="tspan3477-8-7" transform="matrix(1 0 0 1 224.9426 229.4006)" font-family="'ArialMT'" font-size="12">3</text>
+</g>
+<g id="text3475-74-0">
+	<text id="tspan3477-9-7" transform="matrix(1 0 0 1 260.3752 229.4006)" font-family="'ArialMT'" font-size="12">4</text>
+</g>
+<g id="text3475-24-4">
+	<text id="tspan3477-45-5" transform="matrix(1 0 0 1 295.8088 229.4006)" font-family="'ArialMT'" font-size="12">5</text>
+</g>
+<g id="text3475-9-3">
+	<text id="tspan3477-1-0" transform="matrix(1 0 0 1 331.2415 229.4006)" font-family="'ArialMT'" font-size="12">6</text>
+</g>
+<g id="text3475-28-7">
+	<text id="tspan3477-96-2" transform="matrix(1 0 0 1 366.675 229.4006)" font-family="'ArialMT'" font-size="12">7</text>
+</g>
+<g id="text3475-0-9">
+	<text id="tspan3477-6-9" transform="matrix(1 0 0 1 402.1077 229.4006)" font-family="'ArialMT'" font-size="12">8</text>
+</g>
+<g id="text3475-4-3">
+	<text id="tspan3477-0-0" transform="matrix(1 0 0 1 437.5413 229.4006)" font-family="'ArialMT'" font-size="12">9</text>
+</g>
+<g id="text3475-94-2">
+	<text id="tspan3477-54-7" transform="matrix(1 0 0 1 472.9739 229.4006)" font-family="'ArialMT'" font-size="12">10</text>
+</g>
+<g id="text3475-66-9">
+	<text id="tspan3477-39-9" transform="matrix(1 0 0 1 508.4075 229.4006)" font-family="'ArialMT'" font-size="12">11</text>
+</g>
+<g id="text3475-95-5">
+	<text id="tspan3477-2-2" transform="matrix(1 0 0 1 543.8401 229.4006)" font-family="'ArialMT'" font-size="12">12</text>
+</g>
+<line id="line4482-30-1" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="607.811" y1="114.016" x2="572.378" y2="114.016"/>
+<line id="connector16pin" fill="none" stroke="#000000" stroke-width="1" x1="607.811" y1="114.016" x2="583.008" y2="114.016"/>
+<line id="line4482-30-5" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="607.811" y1="138.949" x2="572.378" y2="138.949"/>
+<line id="connector17pin" fill="none" stroke="#000000" stroke-width="1" x1="607.811" y1="138.949" x2="583.008" y2="138.949"/>
+<line id="line4482-30-59" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="607.811" y1="163.882" x2="572.378" y2="163.882"/>
+<line id="connector18pin" fill="none" stroke="#000000" stroke-width="1" x1="607.811" y1="163.882" x2="583.008" y2="163.882"/>
+<line id="line4482-30-5_1_" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="607.812" y1="188.813" x2="572.379" y2="188.813"/>
+<line id="connector17pin_1_" fill="none" stroke="#000000" stroke-width="1" x1="607.812" y1="188.813" x2="583.009" y2="188.813"/>
+<line id="line4482-30-59_1_" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="607.812" y1="213.745" x2="572.379" y2="213.745"/>
+<line id="connector18pin_1_" fill="none" stroke="#000000" stroke-width="1" x1="607.812" y1="213.745" x2="583.009" y2="213.745"/>
+<line id="line4482-30-1_1_" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="21.999" y1="201.278" x2="57.431" y2="201.278"/>
+<line id="connector16pin_1_" fill="none" stroke="#000000" stroke-width="1" x1="21.999" y1="201.278" x2="46.802" y2="201.278"/>
+<line id="line4482-30-5_3_" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="21.999" y1="176.345" x2="57.431" y2="176.345"/>
+<line id="connector17pin_3_" fill="none" stroke="#000000" stroke-width="1" x1="21.999" y1="176.345" x2="46.802" y2="176.345"/>
+<line id="line4482-30-59_2_" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="21.999" y1="151.411" x2="57.431" y2="151.411"/>
+<line id="connector18pin_2_" fill="none" stroke="#000000" stroke-width="1" x1="21.999" y1="151.411" x2="46.802" y2="151.411"/>
+<line id="line4482-30-5_2_" fill="none" stroke="#000000" stroke-width="2.7898" stroke-linejoin="round" x1="21.998" y1="126.481" x2="57.43" y2="126.481"/>
+<line id="connector17pin_2_" fill="none" stroke="#000000" stroke-width="1" x1="21.998" y1="126.481" x2="46.801" y2="126.481"/>
+<text transform="matrix(1 0 0 1 62.4133 134.3972)" font-family="'MyriadPro-Regular'" font-size="12">VUSB</text>
+<text transform="matrix(1 0 0 1 62.4133 158.3972)" font-family="'MyriadPro-Regular'" font-size="12">AREF</text>
+<text transform="matrix(1 0 0 1 62.4133 181.9075)" font-family="'MyriadPro-Regular'" font-size="12">A10</text>
+<text transform="matrix(1 0 0 1 62.4133 205.9075)" font-family="'MyriadPro-Regular'" font-size="12">A11</text>
+</svg>

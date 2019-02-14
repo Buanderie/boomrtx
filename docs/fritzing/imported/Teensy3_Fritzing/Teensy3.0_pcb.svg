@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1"
+	 id="svg2" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="187.795px"
+	 height="81.496px" viewBox="0 0 187.795 81.496" enable-background="new 0 0 187.795 81.496" xml:space="preserve">
+<title  id="title4">teensypp.mod</title>
+<desc  id="desc6">Kicad module &apos;teensypp-TEENSY++&apos; from file &apos;teensypp.mod&apos; converted by Fritzing</desc>
+<g id="copper0">
+	<circle id="connector13pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="141.243" cy="18.459" r="2.252"/>
+	<circle id="connector22pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="48.908" cy="61.559" r="2.252"/>
+	<circle id="connector23pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="56.035" cy="61.559" r="2.252"/>
+	<circle id="connector24pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="63.16" cy="61.559" r="2.252"/>
+	<circle id="connector25pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="70.285" cy="61.559" r="2.252"/>
+	<circle id="connector26pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="77.409" cy="61.559" r="2.252"/>
+	<circle id="connector27pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="84.533" cy="61.559" r="2.252"/>
+	<circle id="connector28pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="91.659" cy="61.559" r="2.252"/>
+	<circle id="connector29pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="98.783" cy="61.559" r="2.252"/>
+	<circle id="connector30pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="105.909" cy="61.559" r="2.252"/>
+	<circle id="connector31pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="113.033" cy="61.559" r="2.252"/>
+	<circle id="connector32pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="120.157" cy="61.559" r="2.252"/>
+	<circle id="connector33pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="127.282" cy="61.559" r="2.252"/>
+	<path id="connector34pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" d="M134.406,59.307
+		c1.245,0,2.253,1.007,2.253,2.252s-1.008,2.252-2.253,2.252c-1.241,0-2.252-1.007-2.252-2.252S133.165,59.307,134.406,59.307z"/>
+	<path id="connector35pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" d="M141.532,59.307
+		c1.24,0,2.252,1.007,2.252,2.252s-1.012,2.252-2.252,2.252c-1.246,0-2.254-1.007-2.254-2.252S140.286,59.307,141.532,59.307z"/>
+	<circle id="connector37pin_5_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="141.531" cy="54.374" r="2.253"/>
+	<circle id="connector37pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="141.531" cy="47.191" r="2.253"/>
+	<circle id="connector37pin_2_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="141.531" cy="32.824" r="2.253"/>
+	<circle id="connector37pin_3_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="141.531" cy="25.643" r="2.253"/>
+	<circle id="connector37pin_6_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="55.746" cy="25.643" r="2.252"/>
+	<circle id="connector37pin_7_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="70.284" cy="25.643" r="2.252"/>
+	<circle id="connector37pin_9_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="77.409" cy="25.643" r="2.253"/>
+	<circle id="connector37pin_11_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="84.245" cy="25.643" r="2.252"/>
+	<circle id="connector37pin_4_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="141.531" cy="40.008" r="2.253"/>
+	<circle id="connector22pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="48.619" cy="18.459" r="2.252"/>
+	<circle id="connector23pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="55.746" cy="18.459" r="2.252"/>
+	<circle id="connector24pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="62.87" cy="18.459" r="2.252"/>
+	<circle id="connector25pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="69.995" cy="18.459" r="2.252"/>
+	<circle id="connector26pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="77.12" cy="18.459" r="2.252"/>
+	<circle id="connector27pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="84.244" cy="18.459" r="2.252"/>
+	<circle id="connector28pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="91.37" cy="18.459" r="2.252"/>
+	<circle id="connector29pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="98.494" cy="18.459" r="2.252"/>
+	<circle id="connector30pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="105.62" cy="18.459" r="2.252"/>
+	<circle id="connector31pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="112.744" cy="18.459" r="2.252"/>
+	<circle id="connector32pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="119.868" cy="18.459" r="2.252"/>
+	<circle id="connector33pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" cx="126.993" cy="18.459" r="2.252"/>
+	<path id="connector34pin_1_" fill="#FFFFFF" stroke="#FF9400" stroke-width="0.864" d="M134.117,16.207
+		c1.245,0,2.253,1.007,2.253,2.252s-1.008,2.252-2.253,2.252c-1.241,0-2.252-1.007-2.252-2.252S132.876,16.207,134.117,16.207z"/>
+</g>
+</svg>
