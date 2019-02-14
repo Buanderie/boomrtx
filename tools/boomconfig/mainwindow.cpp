@@ -10,6 +10,7 @@
 
 #include <iomanip>
 #include <iostream>
+using namespace std;
 
 void print_bytes(std::ostream& out, const char *title, const unsigned char *data, size_t dataLen, bool format = true, int symbol_per_line = 64 ) {
     out << title << std::endl;
@@ -42,6 +43,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_serial, &QSerialPort::errorOccurred, this, &MainWindow::handleError);
     _parser = (void*)(new FrameParser());
 
+    // Quality progress bar
+    ui->qualityValue->setRange( 0.0, 1.0 );
+    ui->qualityValue->setValue( 0.0 );
+
     // Properties
     ui->deviceId->setLabelText( "ID" );
     ui->deviceType->setLabelText( "Device Type" );
@@ -52,6 +57,10 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->deviceType->setValueText("-");
     ui->deviceTxPower->setValueText("-");
     ui->deviceChannel->setValueText("-");
+
+    ui->targetDevice1->setLabelText("Target Device #1 ID");
+    ui->targetDevice2->setLabelText("Target Device #2 ID");
+    ui->transmitterSettings->hide();
 
     _deviceId = -1;
     frameIdx = 0;
@@ -140,13 +149,30 @@ void MainWindow::serialPing()
             }
             _qual.pushPing();
             double quality = _qual.quality();
-            ui->qualityValue->setText( QString::number( quality * 100.0, 10, 1 ) + QString("%") );
-            if( quality > 0.95 )
+            // ui->qualityValue->setText( QString::number( quality * 100.0, 10, 1 ) + QString("%") );
+            ui->qualityValue->setValue( quality );
+            if( quality > 0.85 )
             {
+                qDebug() << "@@@@ " << ui->deviceType->getValueText();
                 notifySerialLinkQuality(true);
+                if( ui->deviceType->getValueText() == "TRANSMITTER" )
+                {
+                    if( !ui->transmitterSettings->isVisible() )
+                    {
+                        ui->transmitterSettings->show();
+                        // Also request targets...
+                        // TODO
+                    }
+                }
+                else {
+                    ui->transmitterSettings->hide();
+                }
             }
             else
+            {
                 notifySerialLinkQuality(false);
+                ui->transmitterSettings->hide();
+            }
         }
     }
 }
@@ -184,7 +210,7 @@ void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size 
         QString deviceTypeStr = tr("UNKWOWN");
         if( device_type == 0x00 )
         {
-            deviceTypeStr = tr("EMITTER");
+            deviceTypeStr = tr("TRANSMITTER");
         }
         else if( device_type == 0x01 )
         {
@@ -197,7 +223,7 @@ void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size 
             _deviceId = (int)payload[0];
             qDebug() << "Detected DEVICE ID=" << _deviceId;
             ui->deviceId->setValueText( QString::number( _deviceId, 16 ).toUpper() );
-            requestRadioChannel(  );
+            requestRadioChannel();
             requestRadioPower();
         }
 

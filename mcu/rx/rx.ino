@@ -96,9 +96,8 @@ COROUTINE(configRoutine) {
                     // activityBlink();
                 }
             }
-            COROUTINE_DELAY(20);
         }
-        COROUTINE_DELAY(20);
+        COROUTINE_YIELD();
     }
 }
 
@@ -115,12 +114,12 @@ COROUTINE(radioRxRoutine) {
                 {
                     Frame pongFrame = createPongFrame( __device_id, __device_type );
                     int bsize = frameToBuffer( pongFrame, buf, 32 );
-                    Serial.write( buf, bsize );
-                    // activityBlink();
+                    Serial1.write( buf, bsize );
+                    activityBlink();
                 }
-                COROUTINE_DELAY(20);
+                COROUTINE_YIELD();
             }
-            COROUTINE_DELAY(20);
+            COROUTINE_YIELD();
         }
     }
 }

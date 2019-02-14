@@ -29,7 +29,8 @@ SOURCES += \
     settingsdialog.cpp \
     ../../common/crc16.cpp \
     ledindicator.cpp \
-    propertyframe.cpp
+    propertyframe.cpp \
+    qroundprogressbar.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +40,8 @@ HEADERS += \
     propertyframe.h \
     ../../common/frame.h \
     ../../common/frameparser.h \
-    linkquality.h
+    linkquality.h \
+    qroundprogressbar.h
 
 FORMS += \
         mainwindow.ui \

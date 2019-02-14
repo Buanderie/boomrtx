@@ -6,7 +6,7 @@
 #include <QTimer>
 
 #include "settingsdialog.h"
-#include "linkquality.h"
+#include "../../common/linkquality.h"
 
 namespace Ui {
 class MainWindow;
@@ -57,7 +57,7 @@ private:
     int _deviceId;
 
     // PING/PONG stats
-    LinkQuality<30> _qual;
+    LinkQuality<50> _qual;
 
     void processFrame(int opcode, uint8_t* payload , size_t payload_size);
     void requestRadioChannel();

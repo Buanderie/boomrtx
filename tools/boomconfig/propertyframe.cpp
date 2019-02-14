@@ -23,6 +23,11 @@ void PropertyFrame::setValueText(QString txt)
     ui->lineEdit->setText( txt );
 }
 
+QString PropertyFrame::getValueText()
+{
+    return ui->lineEdit->text();
+}
+
 void PropertyFrame::on_pushButton_2_clicked()
 {
     emit valueUpdated(ui->lineEdit->text());

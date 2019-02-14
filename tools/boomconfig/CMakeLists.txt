@@ -32,6 +32,8 @@ set(helloworld_SRCS
 	ledindicator.cpp
 	settingsdialog.ui
 	settingsdialog.cpp
+	qroundprogressbar.h
+	qroundprogressbar.cpp
 	${BOOMRTX_COMMON_CPP}
 	${BOOMRTX_COMMON_HEADERS}
     main.cpp

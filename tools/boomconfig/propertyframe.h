@@ -17,6 +17,7 @@ public:
 
     void setLabelText( QString txt );
     void setValueText( QString txt );
+    QString getValueText();
 
 signals:
     void valueUpdated(const QString& valueStr);

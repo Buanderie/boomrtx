@@ -17,7 +17,7 @@ FrameParser radioFrameParser;
 
 // TX Device Default Settings
 uint8_t __device_id = 0x00;
-uint8_t __device_type = 0x01;
+uint8_t __device_type = 0x00;
 uint8_t __radioChannel = 0x05;
 uint8_t __radioPower = 0xf0;
 
@@ -115,9 +115,20 @@ COROUTINE(configRoutine) {
                     // activityBlink();
                 }
             }
-            COROUTINE_DELAY(20);
+            // COROUTINE_DELAY(20);
         }
-        COROUTINE_DELAY(20);
+        COROUTINE_YIELD();
+    }
+}
+
+// Task...
+COROUTINE(checkQualityRoutine) {
+    COROUTINE_LOOP() {
+        if( linkQuality.quality() > 0.8 )
+          digitalWrite(led1, HIGH);
+        else
+          digitalWrite(led1, LOW);
+        COROUTINE_DELAY(50);
     }
 }
 
@@ -132,12 +143,11 @@ COROUTINE(radioRxRoutine) {
                 Frame f = radioFrameParser.getFrame();
                 if( f.opcode == OP_PONG )
                 {
-                    linkQuality.pushPong();
+                  linkQuality.pushPong();
                 }
-                COROUTINE_DELAY(20);
             }
-            COROUTINE_DELAY(20);
         }
+        COROUTINE_YIELD();
     }
 }
 

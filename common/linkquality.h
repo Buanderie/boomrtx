@@ -55,7 +55,7 @@ public:
     {
         double p, pp;
         count( p,  pp );
-        return pp / p;
+        return (pp / p);
     }
 
 private:

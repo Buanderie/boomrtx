@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>635</width>
-    <height>520</height>
+    <height>688</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,21 +17,27 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox_3">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
       <property name="title">
        <string>Device Settings</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="2" column="0">
-        <widget class="PropertyFrame" name="deviceChannel" native="true"/>
-       </item>
-       <item row="0" column="0">
-        <widget class="PropertyFrame" name="deviceType" native="true"/>
+       <item row="3" column="0">
+        <widget class="PropertyFrame" name="deviceTxPower" native="true"/>
        </item>
        <item row="1" column="0">
         <widget class="PropertyFrame" name="deviceId" native="true"/>
        </item>
-       <item row="3" column="0">
-        <widget class="PropertyFrame" name="deviceTxPower" native="true"/>
+       <item row="0" column="0">
+        <widget class="PropertyFrame" name="deviceType" native="true"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="PropertyFrame" name="deviceChannel" native="true"/>
        </item>
       </layout>
      </widget>
@@ -41,15 +47,22 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>80</height>
+        <height>100</height>
        </size>
       </property>
       <property name="title">
        <string>Serial Status</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="LedIndicator" name="serialLinkLed" native="true"/>
+       <item row="0" column="4">
+        <widget class="QRoundProgressBar" name="qualityValue" native="true">
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>60</height>
+          </size>
+         </property>
+        </widget>
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="serialLinkLabel">
@@ -65,26 +78,92 @@
          </property>
         </widget>
        </item>
+       <item row="0" column="0">
+        <widget class="LedIndicator" name="serialLinkLed" native="true"/>
+       </item>
        <item row="0" column="2">
         <widget class="LedIndicator" name="serialQualityLed" native="true"/>
        </item>
-       <item row="0" column="4">
-        <widget class="QLabel" name="qualityValue">
-         <property name="maximumSize">
-          <size>
-           <width>80</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::Box</enum>
-         </property>
-         <property name="text">
-          <string>9000%</string>
-         </property>
-        </widget>
-       </item>
       </layout>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QTabWidget" name="transmitterSettings">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>200</height>
+       </size>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab">
+       <attribute name="title">
+        <string>Transmitter Settings</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="PropertyFrame" name="targetDevice1" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>60</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="PropertyFrame" name="targetDevice2" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>60</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_2">
+       <attribute name="title">
+        <string>Transmitter Debug</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="title">
+           <string>Target Radio Quality</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QProgressBar" name="progressBar">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>15</number>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_4">
+          <property name="title">
+           <string>Firing</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -130,6 +209,12 @@
    <class>PropertyFrame</class>
    <extends>QWidget</extends>
    <header>propertyframe.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>QRoundProgressBar</class>
+   <extends>QWidget</extends>
+   <header>qroundprogressbar.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
