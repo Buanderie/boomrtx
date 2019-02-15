@@ -1,1 +1,1 @@
-![BoomRTX logo](./graphics/logo_small.png)
+![BoomRTX logo](./graphics/logo_small_black.png)
