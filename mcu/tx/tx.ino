@@ -114,6 +114,13 @@ COROUTINE(configRoutine) {
                     Serial.write( buf, bsize );
                     // activityBlink();
                 }
+                else if( f.opcode == OP_GET_RADIO_QUALITY )
+                {
+                  uint8_t qvalue = (uint8_t)(linkQuality.quality() * 255.0);
+                  Frame radioQualityAckFrame = createRadioQualityAckFrame( __device_id, qvalue );
+                  int bsize = frameToBuffer( radioQualityAckFrame, buf, 32 );
+                  Serial.write( buf, bsize );
+                }
             }
             // COROUTINE_DELAY(20);
         }
@@ -157,6 +164,8 @@ void setup() {
     __device_id = EEPROM.read(0x00);
     __radioChannel = EEPROM.read(0x01);
     __radioPower = EEPROM.read(0x02);
+    __targetDeviceId1 = EEPROM.read(0x03);
+    __targetDeviceId2 = EEPROM.read(0x04);
 
     Serial.begin(9600);
     Serial1.begin(9600);
@@ -164,10 +173,14 @@ void setup() {
     // Setup the 3 pins as OUTPUT
     pinMode(led1, OUTPUT);
 
+    // Setup coroutine scheduler
     CoroutineScheduler::setup();
 
 }
 
 void loop() {
+
+    // Tick coroutine scheduler
     CoroutineScheduler::loop();
+    
 }

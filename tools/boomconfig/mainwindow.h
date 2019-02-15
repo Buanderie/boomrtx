@@ -33,6 +33,7 @@ private slots:
     void readData();
     void handleError(QSerialPort::SerialPortError error);
     void serialPing();
+    void radioQualityRequest();
 
     void on_actionDisconnect_triggered();
 
@@ -58,6 +59,9 @@ private:
 
     // PING/PONG stats
     LinkQuality<50> _qual;
+
+    // Transmitter Radio Quality Timer
+    QTimer * _radioQualityTimer = nullptr;
 
     void processFrame(int opcode, uint8_t* payload , size_t payload_size);
     void requestRadioChannel();

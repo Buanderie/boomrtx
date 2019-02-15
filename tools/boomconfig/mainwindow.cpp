@@ -39,6 +39,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_pingTimer, SIGNAL(timeout()), this, SLOT(serialPing()));
     _pingTimer->start(50);
 
+    _radioQualityTimer = new QTimer(this);
+    connect(_radioQualityTimer, SIGNAL(timeout()), this, SLOT(radioQualityRequest()));
+
     connect(_serial, &QSerialPort::readyRead, this, &MainWindow::readData);
     connect(_serial, &QSerialPort::errorOccurred, this, &MainWindow::handleError);
     _parser = (void*)(new FrameParser());
@@ -160,12 +163,14 @@ void MainWindow::serialPing()
                     if( !ui->transmitterSettings->isVisible() )
                     {
                         ui->transmitterSettings->show();
+                        _radioQualityTimer->start(50);
                         // Also request targets...
                         // TODO
                     }
                 }
                 else {
                     ui->transmitterSettings->hide();
+                    _radioQualityTimer->stop();
                 }
             }
             else
@@ -173,6 +178,21 @@ void MainWindow::serialPing()
                 notifySerialLinkQuality(false);
                 ui->transmitterSettings->hide();
             }
+        }
+    }
+}
+
+void MainWindow::radioQualityRequest()
+{
+    qDebug() << "ASKING FOR RADIO QUALITY !";
+    uint8_t buffer[ 512 ];
+    Frame getRadioQualFrame = createGetRadioQualityFrame( (uint8_t)_deviceId );
+    int bsize = frameToBuffer( getRadioQualFrame, buffer, 512 );
+    if( _isConnected )
+    {
+        if( _serial->isWritable() )
+        {
+            _serial->write( (const char*)buffer, bsize );
         }
     }
 }
@@ -248,6 +268,17 @@ void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size 
         uint8_t radio_power = payload[ 1 ];
         qDebug() << "******* RADIO_POWER = " << (int)radio_power;
         ui->deviceTxPower->setValueText( QString::number( radio_power, 16 ).toUpper() );
+        break;
+    }
+
+    case OP_RADIO_QUALITY_ACK:
+    {
+        qDebug() << "Received RADIO_QUALITY from device ID=" << (int)payload[0];
+        uint8_t device_id = payload[ 0 ];
+        uint8_t radio_quality = payload[ 1 ];
+        double radioQuality = (double)radio_quality / 255.0;
+        qDebug() << "******* RADIO_QUALITY = " << radioQuality;
+        ui->radioQualityProgressBar->setValue( radioQuality * 100 );
         break;
     }
 

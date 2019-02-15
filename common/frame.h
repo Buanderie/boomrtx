@@ -135,6 +135,27 @@ Frame createRadioPowerAckFrame( uint8_t device_id, uint8_t radio_power, uint8_t 
     return ret;
 }
 
+Frame createGetRadioQualityFrame( uint8_t device_id, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 1;
+    ret.payload[ 0 ] = device_id;
+    ret.opcode = OP_GET_RADIO_QUALITY;
+    return ret;
+}
+
+Frame createRadioQualityAckFrame( uint8_t device_id, uint8_t quality, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 2;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = quality;
+    ret.opcode = OP_RADIO_QUALITY_ACK;
+    return ret;
+}
+
 size_t frameToBuffer( Frame& f, uint8_t* buffer, size_t bufferSize )
 {
     int offset = 0;
