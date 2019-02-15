@@ -17,6 +17,7 @@ public:
 
     void setLabelText( QString txt );
     void setValueText( QString txt );
+    void setEditable( bool value );
     QString getValueText();
 
 signals:
@@ -27,6 +28,9 @@ private slots:
 
 private:
     Ui::PropertyFrame *ui;
+    QString _value;
+    bool _editable;
+
 };
 
 #endif // PROPERTYFRAME_H

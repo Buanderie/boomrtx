@@ -7,15 +7,15 @@
     <x>0</x>
     <y>0</y>
     <width>696</width>
-    <height>856</height>
+    <height>632</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>BoomRTX Configuration Tool</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="1" column="0">
+    <item row="2" column="0">
      <widget class="QGroupBox" name="groupBox_3">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
@@ -42,7 +42,7 @@
       </layout>
      </widget>
     </item>
-    <item row="0" column="0">
+    <item row="1" column="0">
      <widget class="QGroupBox" name="groupBox">
       <property name="maximumSize">
        <size>
@@ -51,14 +51,14 @@
        </size>
       </property>
       <property name="title">
-       <string>Serial Status</string>
+       <string>Serial Link Status</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="4">
+       <item row="0" column="5">
         <widget class="QRoundProgressBar" name="qualityValue" native="true">
          <property name="minimumSize">
           <size>
-           <width>0</width>
+           <width>60</width>
            <height>60</height>
           </size>
          </property>
@@ -71,7 +71,7 @@
          </property>
         </widget>
        </item>
-       <item row="0" column="3">
+       <item row="0" column="4">
         <widget class="QLabel" name="label">
          <property name="text">
           <string>Serial Link Quality</string>
@@ -81,13 +81,26 @@
        <item row="0" column="0">
         <widget class="LedIndicator" name="serialLinkLed" native="true"/>
        </item>
-       <item row="0" column="2">
+       <item row="0" column="3">
         <widget class="LedIndicator" name="serialQualityLed" native="true"/>
+       </item>
+       <item row="0" column="2">
+        <spacer name="horizontalSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
        </item>
       </layout>
      </widget>
     </item>
-    <item row="2" column="0">
+    <item row="3" column="0">
      <widget class="QTabWidget" name="transmitterSettings">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
@@ -203,6 +216,16 @@
         </item>
        </layout>
       </widget>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="logoLabel">
+      <property name="text">
+       <string>BoomRTX Logo</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
      </widget>
     </item>
    </layout>

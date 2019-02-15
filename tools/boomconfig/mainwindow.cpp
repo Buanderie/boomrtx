@@ -29,6 +29,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // Load BoomRTX logo
+    QPixmap mypix (":/logo_small.png");
+    ui->logoLabel->setPixmap(mypix);
+
     _isConnected = false;
     notifySerialLinkConnection( _isConnected );
 
@@ -47,20 +52,32 @@ MainWindow::MainWindow(QWidget *parent) :
     _parser = (void*)(new FrameParser());
 
     // Quality progress bar
+    ui->qualityValue->setDecimals( 0 );
     ui->qualityValue->setRange( 0.0, 1.0 );
-    ui->qualityValue->setValue( 0.0 );
+    ui->qualityValue->setValue( 0.33 );
+    ui->qualityValue->setBarStyle( QRoundProgressBar::StyleLine );
+    ui->qualityValue->setOutlinePenWidth(18);
+    ui->qualityValue->setDataPenWidth(10);
+    /*
+    ui->signalProgressBar->setDecimals(2);
+    ui->signalProgressBar->setBarStyle(QRoundProgressBar::StyleLine);
+    ui->signalProgressBar->setOutlinePenWidth(18);
+    ui->signalProgressBar->setDataPenWidth(10);
+    */
 
     // Properties
-    ui->deviceId->setLabelText( "ID" );
+    ui->deviceId->setLabelText( "Device ID\n[0 - 255]" );
     ui->deviceType->setLabelText( "Device Type" );
-    ui->deviceTxPower->setLabelText( "Radio TX Power");
-    ui->deviceChannel->setLabelText("Radio Channel\n[1 - 127]");
+    ui->deviceType->setEditable( false );
+    ui->deviceTxPower->setLabelText( "Radio TX Power\n[1 - 8]" );
+    ui->deviceChannel->setLabelText( "Radio Channel\n[1 - 127]" );
 
     ui->deviceId->setValueText("-");
     ui->deviceType->setValueText("-");
     ui->deviceTxPower->setValueText("-");
     ui->deviceChannel->setValueText("-");
 
+    // Transmitter settings
     ui->targetDevice1->setLabelText("Target Device #1 ID");
     ui->targetDevice2->setLabelText("Target Device #2 ID");
     ui->transmitterSettings->hide();

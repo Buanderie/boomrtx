@@ -6,8 +6,8 @@ LedIndicator::LedIndicator(QWidget *parent) :
 {
     setFixedSize(28, 28);
     lit = false;
-    ledOnColor=Qt::green;
-    ledOffColor=Qt::red;
+    ledOnColor= QColor::fromRgb(35,212,0); //Qt::green;
+    ledOffColor= QColor::fromRgb(212,0,0);//Qt::red;
     ledOnPattern = Qt::SolidPattern;
     ledOffPattern = Qt::SolidPattern;
     ledSize=20;

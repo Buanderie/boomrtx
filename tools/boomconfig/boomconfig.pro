@@ -47,3 +47,6 @@ FORMS += \
         mainwindow.ui \
     settingsdialog.ui \
     propertyframe.ui
+
+RESOURCES += qdarkstyle/style.qrc \
+    boomrtx.qrc

@@ -6,6 +6,7 @@ PropertyFrame::PropertyFrame(QWidget *parent) :
     ui(new Ui::PropertyFrame)
 {
     ui->setupUi(this);
+    setEditable( true );
 }
 
 PropertyFrame::~PropertyFrame()
@@ -20,15 +21,39 @@ void PropertyFrame::setLabelText(QString txt)
 
 void PropertyFrame::setValueText(QString txt)
 {
-    ui->lineEdit->setText( txt );
+    _value = txt;
+    if( _editable )
+    {
+        ui->lineEdit->setText( _value );
+    }
+    else
+    {
+        ui->valueLabel->setText( _value );
+    }
+}
+
+void PropertyFrame::setEditable(bool value)
+{
+    _editable = value;
+    if( _editable )
+    {
+        ui->lineEdit->show();
+        ui->valueLabel->hide();
+    }
+    else
+    {
+        ui->lineEdit->hide();
+        ui->valueLabel->show();
+        ui->pushButton_2->hide();
+    }
 }
 
 QString PropertyFrame::getValueText()
 {
-    return ui->lineEdit->text();
+    return _value;
 }
 
 void PropertyFrame::on_pushButton_2_clicked()
 {
-    emit valueUpdated(ui->lineEdit->text());
+    emit valueUpdated(_value);
 }
