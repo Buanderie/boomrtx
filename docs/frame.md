@@ -71,4 +71,6 @@ BoomRTX uses several different packets, identified by OpCodes and using the fram
 > [ device_id (8 bits) ][ power_level (8 bits) ]
 
 ## Examples
+(Maybe I should use [mscgen](http://www.mcternan.me.uk/mscgen/index.html))
+
 ### Transmitter PINGing Receiver
