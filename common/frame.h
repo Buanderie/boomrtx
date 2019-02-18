@@ -41,11 +41,12 @@ Frame createFrame( uint8_t opcode, uint8_t flags, uint8_t* payload, size_t paylo
     return ret;
 }
 
-Frame createPingFrame( uint8_t flags = 0x00 )
+Frame createPingFrame( uint8_t target_device_id = 0xff, uint8_t flags = 0x00 )
 {
     Frame ret;
     ret.flags = flags;
-    ret.payload_size = 0;
+    ret.payload_size = 1;
+    ret.payload[ 0 ] = target_device_id;
     ret.opcode = OP_PING;
     return ret;
 }
@@ -153,6 +154,41 @@ Frame createRadioQualityAckFrame( uint8_t device_id, uint8_t quality, uint8_t fl
     ret.payload[ 0 ] = device_id;
     ret.payload[ 1 ] = quality;
     ret.opcode = OP_RADIO_QUALITY_ACK;
+    return ret;
+}
+
+Frame createGetTargetIdFrame( uint8_t device_id, uint8_t target_slot_idx, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 2;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = target_slot_idx;
+    ret.opcode = OP_GET_TARGET_ID;
+    return ret;
+}
+
+Frame createSetTargetIdFrame( uint8_t device_id, uint8_t target_slot_idx, uint8_t target_device_id, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 3;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = target_slot_idx;
+    ret.payload[ 2 ] = target_device_id;
+    ret.opcode = OP_SET_TARGET_ID;
+    return ret;
+}
+
+Frame createTargetIdAckFrame( uint8_t device_id, uint8_t target_slot_idx, uint8_t target_device_id, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    ret.payload_size = 3;
+    ret.payload[ 0 ] = device_id;
+    ret.payload[ 1 ] = target_slot_idx;
+    ret.payload[ 2 ] = target_device_id;
+    ret.opcode = OP_TARGET_ID_ACK;
     return ret;
 }
 

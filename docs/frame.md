@@ -53,3 +53,18 @@ BoomRTX uses several different OpCodes describing different kind of packets that
 
 * **OP_RADIO_POWER_ACK**: Used through configuration serial link. Used to inform other devices which radio power level we're using, or that we succesfully changed our radio power (after receiving **OP_SET_RADIO_POWER**).  Payload for this OP is:
 > [ device_id (8 bits) ][ power_level (8 bits) ]
+
+* **OP_GET_RADIO_QUALITY**: Used through configuration serial link of a TRANSMITTER.  Payload for this OP is:
+> [ device_id (8 bits) ][ power_level (8 bits) ]
+
+* **OP_RADIO_QUALITY_ACK**: Used through configuration serial link of a TRANSMITTER.  Payload for this OP is:
+> [ device_id (8 bits) ][ power_level (8 bits) ]
+
+* **OP_GET_TARGET_ID**: Used through configuration serial link of a receiver.  Payload for this OP is:
+> [ device_id (8 bits) ][ power_level (8 bits) ]
+
+* **OP_SET_TARGET_ID**: Used through configuration serial link of a receiver.  Payload for this OP is:
+> [ device_id (8 bits) ][ power_level (8 bits) ]
+
+* **OP_TARGET_ID_ACK**: Used through configuration serial link of a receiver.  Payload for this OP is:
+> [ device_id (8 bits) ][ power_level (8 bits) ]
