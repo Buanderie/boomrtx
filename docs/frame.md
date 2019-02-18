@@ -1,4 +1,5 @@
-# BoomRTX Communication Protocol
+![BoomRTX logo](../graphics/logo_small_black.png)
+# Communication Protocol
 ## Framing
 BoomRTX uses framing to transmit data between nodes.
 The structure of a frame is as follow:
@@ -16,8 +17,8 @@ The structure of a frame is as follow:
   <tr>
     <td>0xBE</td>
     <td>Can be used to specify<br>frame encoding/encryption options<br>and stuff</td>
-    <td>The kind of operation<br>the frame encodes<br>(please refer to "OPCODES" chapter<br>of the documentation)</td>
-    <td>Size if bytes of the<br>payload. So, indeed, maximum payload size is 255.</td>
+    <td>The kind of operation<br>the frame encodes<br>(please refer to the "Packets" chapter<br>of this document)</td>
+    <td>Size in bytes of the<br>payload. So, indeed, maximum payload size is 255.</td>
     <td>Payload content</td>
     <td>CCITT CRC 16 (poly: 0x1021, start=0x00)<br>Computed on the following elements:<br>OPCODE, PAYLOAD_SIZE, PAYLOAD</td>
     <td>0xEF</td>
@@ -25,8 +26,8 @@ The structure of a frame is as follow:
 </table>
 </dl>
 
-## OpCodes
-BoomRTX uses several different OpCodes describing different kind of packets that are framed using the documented framing data format. They are all declared in the protocol.h file. Here is an exhaustive list:
+## Packets
+BoomRTX uses several different packets, identified by OpCodes and using the frame structure which has already been documented. OpCodes are all declared in the protocol.h file. Here is an exhaustive list, and the description of the corresponding packet:
 * **OP_PING**: Sent in order to query alive devices.  Payload for this OP is:
 > [ (0 bits) ]
 
@@ -68,3 +69,6 @@ BoomRTX uses several different OpCodes describing different kind of packets that
 
 * **OP_TARGET_ID_ACK**: Used through configuration serial link of a receiver.  Payload for this OP is:
 > [ device_id (8 bits) ][ power_level (8 bits) ]
+
+## Examples
+### Transmitter PINGing Receiver
