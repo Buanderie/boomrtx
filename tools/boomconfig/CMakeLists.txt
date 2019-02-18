@@ -11,10 +11,15 @@ include_directories( ${BOOMRTX_SOURCE_DIR}/common/ )
 
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 # Instruct CMake to run moc automatically when needed
 set(CMAKE_AUTOMOC ON)
+
 # Create code from a list of Qt designer ui files
 set(CMAKE_AUTOUIC ON)
+
+# Create code from resources files
+set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 COMPONENTS Core Gui Widgets SerialPort )
 if( Qt5_FOUND )
@@ -24,9 +29,9 @@ if ( Qt5_VERSION VERSION_LESS 5.11.0 )
 endif()
 
 # Populate a CMake variable with the sources
-set(helloworld_SRCS
-    mainwindow.ui
-    mainwindow.cpp
+set(	helloworld_SRCS
+    	mainwindow.ui
+    	mainwindow.cpp
 	propertyframe.ui
 	propertyframe.cpp
 	ledindicator.cpp
@@ -36,7 +41,9 @@ set(helloworld_SRCS
 	qroundprogressbar.cpp
 	${BOOMRTX_COMMON_CPP}
 	${BOOMRTX_COMMON_HEADERS}
-    main.cpp
+	qdarkstyle/style.qrc
+	boomrtx.qrc
+    	main.cpp
 )
 
 # Tell CMake to create the helloworld executable
