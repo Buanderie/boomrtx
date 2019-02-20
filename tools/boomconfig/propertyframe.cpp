@@ -57,3 +57,16 @@ void PropertyFrame::on_pushButton_2_clicked()
 {
     emit valueUpdated(_value);
 }
+
+void PropertyFrame::on_lineEdit_selectionChanged()
+{
+
+}
+
+void PropertyFrame::on_lineEdit_textEdited(const QString &arg1)
+{
+    if( _editable )
+    {
+        _value = arg1;
+    }
+}

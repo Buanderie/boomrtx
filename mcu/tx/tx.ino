@@ -23,10 +23,10 @@ uint8_t __radioPower = 0xf0;
 
 uint8_t __targetDeviceId1 = 0x01;
 uint8_t __targetDeviceId2 = 0x02;
-uint8_t __targetDeviceId = __targetDeviceId1;
+uint8_t __targetDeviceSlot = 0;
 
 // Link Quality measure
-LinkQuality< 50 > linkQuality;
+LinkQuality< 40 > linkQuality;
 
 int led1 = LED_BUILTIN; // more portable
 int needBlink = 1;
@@ -119,6 +119,40 @@ COROUTINE(configRoutine) {
                   uint8_t qvalue = (uint8_t)(linkQuality.quality() * 255.0);
                   Frame radioQualityAckFrame = createRadioQualityAckFrame( __device_id, qvalue );
                   int bsize = frameToBuffer( radioQualityAckFrame, buf, 32 );
+                  Serial.write( buf, bsize );
+                }
+                else if( f.opcode == OP_GET_TARGET_ID )
+                {
+                  uint8_t slot = f.payload[ 1 ];
+                  uint8_t retValue;
+                  if( slot == 0 )
+                  {
+                    retValue = __targetDeviceId1;
+                  }
+                  else
+                  {
+                    retValue = __targetDeviceId2;
+                  }
+                  Frame targetIdAckFrame = createTargetIdAckFrame( __device_id, slot, retValue );
+                  int bsize = frameToBuffer( targetIdAckFrame, buf, 32 );
+                  Serial.write( buf, bsize );
+                }
+                else if( f.opcode == OP_SET_TARGET_ID )
+                {
+                  uint8_t slot = f.payload[ 1 ];
+                  uint8_t retValue = f.payload[ 2 ];
+                  if( slot == 0 )
+                  {
+                    __targetDeviceId1 = retValue;
+                    EEPROM.write(0x03, retValue);
+                  }
+                  else
+                  {
+                    __targetDeviceId2 = retValue;
+                    EEPROM.write(0x04, retValue);
+                  }
+                  Frame targetIdAckFrame = createTargetIdAckFrame( __device_id, slot, retValue );
+                  int bsize = frameToBuffer( targetIdAckFrame, buf, 32 );
                   Serial.write( buf, bsize );
                 }
             }

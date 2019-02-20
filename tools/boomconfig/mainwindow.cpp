@@ -259,7 +259,7 @@ void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size 
             // Then, update device id...
             _deviceId = (int)payload[0];
             qDebug() << "Detected DEVICE ID=" << _deviceId;
-            ui->deviceId->setValueText( QString::number( _deviceId, 16 ).toUpper() );
+            ui->deviceId->setValueText( QString::number( _deviceId, 10 ).toUpper() );
             requestRadioChannel();
             requestRadioPower();
         }
@@ -356,6 +356,7 @@ void MainWindow::setDevicePower(uint8_t devicePower)
     int bsize = frameToBuffer( devicePowerFrame, buffer, 512 );
     if( _serial->isWritable() )
     {
+        print_bytes( cerr, "SET_POWER", buffer, bsize );
         _serial->write( (const char*)buffer, bsize );
     }
 }
@@ -370,7 +371,7 @@ void MainWindow::on_actionDisconnect_triggered()
 void MainWindow::onDeviceIDUpdate(const QString &valueStr)
 {
     qDebug() << "Need to update DEVICE_ID";
-    int pol = valueStr.toInt(nullptr, 16);
+    int pol = valueStr.toInt();
     setDeviceId( pol );
 }
 
@@ -383,7 +384,8 @@ void MainWindow::onDeviceChannelUpdate(const QString &valueStr)
 
 void MainWindow::onDevicePowerUpdate(const QString &valueStr)
 {
-    qDebug() << "Need to update DEVICE_POWER";
-    int pol = valueStr.toInt(nullptr, 16);
+    //    qDebug() << "Need to update DEVICE_POWER";
+    int pol = valueStr.toInt();
+    qDebug() << "Need to update DEVICE_POWER pol=" << pol << " valueStr=" << valueStr;
     setDevicePower( pol );
 }

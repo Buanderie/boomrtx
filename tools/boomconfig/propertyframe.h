@@ -26,6 +26,10 @@ signals:
 private slots:
     void on_pushButton_2_clicked();
 
+    void on_lineEdit_selectionChanged();
+
+    void on_lineEdit_textEdited(const QString &arg1);
+
 private:
     Ui::PropertyFrame *ui;
     QString _value;
