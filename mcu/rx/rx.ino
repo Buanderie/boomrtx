@@ -4,6 +4,7 @@
 // Include Scheduler since we want to manage multiple tasks.
 #include "frameparser.h"
 #include "linkquality.h"
+#include "ledtrigger.h"
 
 //
 #include "AceRoutine.h"
@@ -20,6 +21,10 @@ uint8_t __device_id = 0x01;
 uint8_t __device_type = 0x01;
 uint8_t __radioChannel = 0x05;
 uint8_t __radioPower = 0xf0;
+
+// Triggers
+#define NUM_TRIGGERS 1
+Trigger* _triggers[ NUM_TRIGGERS ];
 
 int led1 = LED_BUILTIN; // more portable
 int needBlink = 1;
@@ -124,7 +129,21 @@ COROUTINE(radioRxRoutine) {
     }
 }
 
+// Task no.4: Check for Trigger states
+COROUTINE(triggerCheckRoutine) {
+    COROUTINE_LOOP() {
+		
+        COROUTINE_YIELD();
+    }
+}
+
 void setup() {
+
+	// Initialize triggers
+	for( int i = 0; i < NUM_TRIGGERS; ++i )
+	{
+		_triggers[i] = new LedTrigger();
+	}
 
     // Retrieve config from EEPROM
     __device_id = EEPROM.read(0x00);

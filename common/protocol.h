@@ -16,7 +16,8 @@ typedef enum
     OP_RADIO_QUALITY_ACK,
     OP_GET_TARGET_ID,
     OP_SET_TARGET_ID,
-    OP_TARGET_ID_ACK
+    OP_TARGET_ID_ACK,
+    OP_DEBUG_MESSAGE
 } OpCode;
 
 #endif // PROTOCOL_H

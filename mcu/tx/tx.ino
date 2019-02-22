@@ -9,6 +9,10 @@
 #include "AceRoutine.h"
 using namespace ace_routine;
 
+// Defines
+#define NUM_TARGET_DEVICES 2
+#define TARGET_DEVICES_EEPROM_ADDR 0x0100
+
 // Config interface
 FrameParser configFrameParser;
 
@@ -21,8 +25,7 @@ uint8_t __device_type = 0x00;
 uint8_t __radioChannel = 0x05;
 uint8_t __radioPower = 0xf0;
 
-uint8_t __targetDeviceId1 = 0x01;
-uint8_t __targetDeviceId2 = 0x02;
+uint8_t __targetDeviceIds[ NUM_TARGET_DEVICES ];
 uint8_t __targetDeviceSlot = 0;
 
 // Link Quality measure
@@ -123,33 +126,25 @@ COROUTINE(configRoutine) {
                 }
                 else if( f.opcode == OP_GET_TARGET_ID )
                 {
-                  uint8_t slot = f.payload[ 1 ];
-                  uint8_t retValue;
-                  if( slot == 0 )
+                  uint8_t targetIdx = 0xff;
+                  int slot = f.payload[ 1 ];
+                  if( slot < NUM_TARGET_DEVICES - 1 )
                   {
-                    retValue = __targetDeviceId1;
+                    targetIdx = __targetDeviceIds[ slot ];
                   }
-                  else
-                  {
-                    retValue = __targetDeviceId2;
-                  }
-                  Frame targetIdAckFrame = createTargetIdAckFrame( __device_id, slot, retValue );
+                  Frame targetIdAckFrame = createTargetIdAckFrame( __device_id, slot, targetIdx );
                   int bsize = frameToBuffer( targetIdAckFrame, buf, 32 );
                   Serial.write( buf, bsize );
                 }
                 else if( f.opcode == OP_SET_TARGET_ID )
                 {
-                  uint8_t slot = f.payload[ 1 ];
-                  uint8_t retValue = f.payload[ 2 ];
-                  if( slot == 0 )
+                  int slot = f.payload[ 1 ];
+                  uint8_t value = f.payload[ 2 ];
+                  uint8_t retValue = 0xff;
+                  if( slot < NUM_TARGET_DEVICES - 1 )
                   {
-                    __targetDeviceId1 = retValue;
-                    EEPROM.write(0x03, retValue);
-                  }
-                  else
-                  {
-                    __targetDeviceId2 = retValue;
-                    EEPROM.write(0x04, retValue);
+                    __targetDeviceIds[ slot ] = value;
+                    EEPROM.write( TARGET_DEVICES_EEPROM_ADDR + slot, value );
                   }
                   Frame targetIdAckFrame = createTargetIdAckFrame( __device_id, slot, retValue );
                   int bsize = frameToBuffer( targetIdAckFrame, buf, 32 );
@@ -198,8 +193,12 @@ void setup() {
     __device_id = EEPROM.read(0x00);
     __radioChannel = EEPROM.read(0x01);
     __radioPower = EEPROM.read(0x02);
-    __targetDeviceId1 = EEPROM.read(0x03);
-    __targetDeviceId2 = EEPROM.read(0x04);
+
+    // Load target device IDs
+    for( int i = 0; i < NUM_TARGET_DEVICES; ++i )
+    {
+      __targetDeviceIds[ i ] = EEPROM.read(TARGET_DEVICES_EEPROM_ADDR + i );
+    }
 
     Serial.begin(9600);
     Serial1.begin(9600);
@@ -216,5 +215,5 @@ void loop() {
 
     // Tick coroutine scheduler
     CoroutineScheduler::loop();
-    
+
 }

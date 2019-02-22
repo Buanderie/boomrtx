@@ -1,6 +1,9 @@
 #ifndef FRAME_H__
 #define FRAME_H__
 
+#define MAX(x, y) (((x) > (y)) ? (x) : (y))
+#define MIN(x, y) (((x) < (y)) ? (x) : (y))
+
 #include "crc16.h"
 #include "protocol.h"
 
@@ -190,6 +193,23 @@ Frame createTargetIdAckFrame( uint8_t device_id, uint8_t target_slot_idx, uint8_
     ret.payload[ 2 ] = target_device_id;
     ret.opcode = OP_TARGET_ID_ACK;
     return ret;
+}
+
+Frame createDebugMsgFrame( uint8_t device_id, const char* msg, size_t msg_len, uint8_t flags = 0x00 )
+{
+  Frame ret;
+  ret.flags = flags;
+  size_t msize = MIN( msg_len, 250 );
+  ret.payload_size = msize + 1;
+  int offset = 0;
+  ret.payload[ offset++ ] = device_id;
+  for( int i = 0; i < msize; ++i )
+  {
+    ret.payload[ offset++ ] = msg[i];
+  }
+  ret.payload[ offset++ ] = 0x00;
+  ret.opcode = OP_DEBUG_MESSAGE;
+  return ret;
 }
 
 size_t frameToBuffer( Frame& f, uint8_t* buffer, size_t bufferSize )
