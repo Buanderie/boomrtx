@@ -40,6 +40,11 @@ public:
     }
   }
 
+  bool isActive()
+  {
+    return (_state == ACTIVE);
+  }
+
   virtual void onActivation()
   {
 

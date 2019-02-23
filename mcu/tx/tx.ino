@@ -25,6 +25,7 @@ uint8_t __device_type = 0x00;
 uint8_t __radioChannel = 0x05;
 uint8_t __radioPower = 0xf0;
 
+bool __useMechanicalTargetSelection = true;
 uint8_t __targetDeviceIds[ NUM_TARGET_DEVICES ];
 uint8_t __targetDeviceSlot = 0;
 
@@ -163,6 +164,31 @@ COROUTINE(configRoutine) {
                   int bsize = frameToBuffer( ff, buf, 32 );
                   Serial1.write( buf, bsize );
                 }
+                else if( f.opcode == OP_TX_TOGGLE_MECHANICAL_TARGET_SELECTION )
+                {
+                  if( f.payload[ 0 ] == 0x00 )
+                  {
+                    __useMechanicalTargetSelection = false;
+                  }
+                  else if( f.payload[ 0 ] == 0x01 )
+                  {
+                    __useMechanicalTargetSelection = true;
+                  }
+                  Frame fack = createTxSelectTargetAckFrame( __targetDeviceSlot );
+                  int bsize = frameToBuffer( fack, buf, 32 );
+                  Serial.write( buf, bsize );
+                }
+                else if( f.opcode == OP_TX_SELECT_TARGET )
+                {
+                  uint8_t target_slot = f.payload[ 0 ];
+                  if( target_slot < NUM_TARGET_DEVICES )
+                  {
+                    __targetDeviceSlot = target_slot;
+                  }
+                  Frame fack = createTxSelectTargetAckFrame( __targetDeviceSlot );
+                  int bsize = frameToBuffer( fack, buf, 32 );
+                  Serial.write( buf, bsize );
+                }
             }
             // COROUTINE_DELAY(20);
         }
@@ -193,6 +219,16 @@ COROUTINE(radioRxRoutine) {
                 if( f.opcode == OP_PONG )
                 {
                   linkQuality.pushPong();
+                }
+                else if( f.opcode == OP_FIRE_ACK )
+                {
+                  uint8_t device_id = f.payload[ 0 ];
+                  if( device_id == __targetDeviceIds[ __targetDeviceSlot ] )
+                  {
+                    // Relay to config interface...
+                    int bsize = frameToBuffer( f, buf, 32 );
+                    Serial.write( buf, bsize );
+                  }
                 }
             }
         }

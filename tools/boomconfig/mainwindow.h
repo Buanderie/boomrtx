@@ -52,6 +52,8 @@ private slots:
 
     void on_triggerFire1_clicked();
 
+    void on_triggerFire2_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -88,6 +90,9 @@ private:
     void refreshTargetDeviceUI( uint8_t slot, uint8_t value );
 
     void triggerFire(uint8_t relay_idx, double durationMilliseconds);
+
+    void toggleMechanicalSelection( bool value );
+    void selectTargetDevice( uint8_t idx );
 
 };
 

@@ -6,7 +6,7 @@
 class LEDTrigger : public Trigger
 {
 public:
-  LEDTrigger( int ledPin )
+  LEDTrigger( int ledPin  = 0 )
   :_ledPin(ledPin)
   {
 

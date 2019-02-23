@@ -4,10 +4,17 @@
 // Include Scheduler since we want to manage multiple tasks.
 #include "frameparser.h"
 #include "linkquality.h"
+#include "ledtrigger.h"
 
 //
 #include "AceRoutine.h"
 using namespace ace_routine;
+
+// Defines
+#define NUM_RELAYS 2
+
+// Triggers
+Trigger * __triggers[ NUM_RELAYS ];
 
 // Config interface
 FrameParser configFrameParser;
@@ -33,11 +40,14 @@ void activityBlink()
         return;
     }
 
+/*
     ledState = !ledState;
     if( ledState )
         digitalWrite(led1, HIGH);
     else
         digitalWrite(led1, LOW);
+*/
+
 }
 
 // Task no.2: accept commands from CONFIG serial port
@@ -126,7 +136,14 @@ COROUTINE(radioRxRoutine) {
                   uint8_t target_device_id = f.payload[ 0 ];
                   if( target_device_id == __device_id )
                   {
-                    needBlink = !needBlink;
+                    uint8_t relay_idx = f.payload[ 1 ];
+                    if( relay_idx < NUM_RELAYS )
+                    {
+                      uint8_t dvalue = f.payload[ 2 ];
+                      double dmillis = ((double)dvalue * 0.05) * 1000.0;
+                      Trigger * trig = __triggers[ relay_idx ];
+                      trig->trigger( dmillis );
+                    }
                   }
                 }
                 COROUTINE_YIELD();
@@ -136,7 +153,28 @@ COROUTINE(radioRxRoutine) {
     }
 }
 
+COROUTINE(triggerTickRoutine) {
+    COROUTINE_LOOP() {
+      uint8_t buf[ 32 ];
+      for( int i = 0; i < NUM_RELAYS; ++i )
+      {
+        Trigger * t = __triggers[ i ];
+        t->tick();
+        Frame fack = createFireAckFrame( __device_id, (uint8_t)i, t->isActive() );
+        int bsize = frameToBuffer( fack, buf, 32 );
+        Serial1.write( buf, bsize );
+      }
+      COROUTINE_DELAY(50);
+    }
+}
+
 void setup() {
+
+    // Initialize triggers
+    for( int i = 0; i < NUM_RELAYS; ++i )
+    {
+      __triggers[ i ] = new LEDTrigger( LED_BUILTIN );
+    }
 
     // Retrieve config from EEPROM
     __device_id = EEPROM.read(0x00);

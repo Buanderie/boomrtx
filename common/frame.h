@@ -225,6 +225,21 @@ Frame createFireFrame( uint8_t device_id, uint8_t output_relay_idx, double durat
   return ret;
 }
 
+Frame createFireAckFrame( uint8_t device_id, uint8_t output_relay_idx, bool activated, uint8_t flags = 0x00 )
+{
+  Frame ret;
+  ret.flags = flags;
+  ret.payload_size = 3;
+  ret.payload[ 0 ] = device_id;
+  ret.payload[ 1 ] = output_relay_idx;
+  uint8_t state = 0x00;
+  if( activated )
+    state = 0x01;
+  ret.payload[ 2 ] = state;
+  ret.opcode = OP_FIRE_ACK;
+  return ret;
+}
+
 Frame createTriggerFireFrame( uint8_t output_relay_idx, double durationMilliseconds, uint8_t flags = 0x00 )
 {
   Frame ret;
@@ -234,6 +249,39 @@ Frame createTriggerFireFrame( uint8_t output_relay_idx, double durationMilliseco
   uint8_t dvalue = (uint8_t)((durationMilliseconds / 1000.0) / 0.05);
   ret.payload[ 1 ] = dvalue;
   ret.opcode = OP_TRIGGER_FIRE;
+  return ret;
+}
+
+Frame createTxToggleMechanicalSelectionFrame( bool value, uint8_t flags = 0x00 )
+{
+  Frame ret;
+  ret.flags = flags;
+  ret.payload_size = 1;
+  if( value )
+    ret.payload[ 0 ] = 1;
+  else
+    ret.payload[ 0 ] = 0;
+  ret.opcode = OP_TX_TOGGLE_MECHANICAL_TARGET_SELECTION;
+  return ret;
+}
+
+Frame createTxSelectTargetFrame( uint8_t target_idx, uint8_t flags = 0x00 )
+{
+  Frame ret;
+  ret.flags = flags;
+  ret.payload_size = 1;
+  ret.payload[ 0 ] = target_idx;
+  ret.opcode = OP_TX_SELECT_TARGET;
+  return ret;
+}
+
+  Frame createTxSelectTargetAckFrame( uint8_t target_idx, uint8_t flags = 0x00 )
+{
+  Frame ret;
+  ret.flags = flags;
+  ret.payload_size = 1;
+  ret.payload[ 0 ] = target_idx;
+  ret.opcode = OP_TX_SELECT_TARGET_ACK;
   return ret;
 }
 

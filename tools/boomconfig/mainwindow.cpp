@@ -94,6 +94,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->targetDevice1, &PropertyFrame::valueUpdated, this, &MainWindow::onTargetDevice1Updated);
     connect(ui->targetDevice2, &PropertyFrame::valueUpdated, this, &MainWindow::onTargetDevice2Updated);
 
+    // UI stuff
+    on_checkMechanicalSelection_stateChanged(0);
+
 }
 
 MainWindow::~MainWindow()
@@ -319,6 +322,39 @@ void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size 
         break;
     }
 
+    case OP_TX_SELECT_TARGET_ACK:
+    {
+        qDebug() << "Received SELECT_TARGET_ACK";
+        uint8_t target_id = payload[ 0 ];
+        if( target_id == 0x00 )
+        {
+            ui->radioSwitchTarget1->setChecked(true);
+        }
+        else if( target_id == 0x01 )
+        {
+            ui->radioSwitchTarget2->setChecked(true);
+        }
+        break;
+    }
+
+    case OP_FIRE_ACK:
+    {
+        qDebug() << "Received FIRE_ACK from device ID=" << (int)payload[0];
+        uint8_t device_id = payload[ 0 ];
+        uint8_t relay_idx = payload[ 1 ];
+        uint8_t relay_value = payload[ 2 ];
+        bool activated = relay_value != 0x00;
+        if( relay_idx == 0x00 )
+        {
+            ui->relayIndicator1->setState(activated);
+        }
+        else if( relay_idx == 0x01 )
+        {
+            ui->relayIndicator2->setState(activated);
+        }
+        break;
+    }
+
     default:
         break;
 
@@ -434,6 +470,30 @@ void MainWindow::triggerFire(uint8_t relay_idx, double durationMilliseconds)
     }
 }
 
+void MainWindow::toggleMechanicalSelection(bool value)
+{
+    uint8_t buffer[ 32 ];
+    Frame f = createTxToggleMechanicalSelectionFrame(value);
+    int bsize = frameToBuffer( f, buffer, 512 );
+    if( _serial->isWritable() )
+    {
+        print_bytes( cerr, "TOGGLE_MECHANICAL", buffer, bsize );
+        _serial->write( (const char*)buffer, bsize );
+    }
+}
+
+void MainWindow::selectTargetDevice(uint8_t idx)
+{
+    uint8_t buffer[ 32 ];
+    Frame f = createTxSelectTargetFrame(idx);
+    int bsize = frameToBuffer( f, buffer, 512 );
+    if( _serial->isWritable() )
+    {
+        print_bytes( cerr, "SELECT_TARGET_IDX", buffer, bsize );
+        _serial->write( (const char*)buffer, bsize );
+    }
+}
+
 void MainWindow::on_actionDisconnect_triggered()
 {
     _isConnected = false;
@@ -481,12 +541,14 @@ void MainWindow::onTargetDevice2Updated(const QString &valueStr)
 void MainWindow::on_radioSwitchTarget2_clicked()
 {
     qDebug() << "Forcing Target #2";
+    selectTargetDevice( 0x01 );
 }
 
 // SELECT TARGET 1
 void MainWindow::on_radioSwitchTarget1_clicked()
 {
-    qDebug() << "Forcing Mechanical Selection";
+    qDebug() << "Forcing Target #1";
+    selectTargetDevice( 0x00 );
 }
 
 void MainWindow::on_checkMechanicalSelection_stateChanged(int arg1)
@@ -500,10 +562,16 @@ void MainWindow::on_checkMechanicalSelection_stateChanged(int arg1)
         ui->radioSwitchTarget1->setEnabled(true);
         ui->radioSwitchTarget2->setEnabled(true);
     }
+    toggleMechanicalSelection( ui->checkMechanicalSelection->isChecked() );
 }
 
 // TRIGGER FIRE RELAY 1
 void MainWindow::on_triggerFire1_clicked()
 {
-    triggerFire( 0, 1000 );
+    triggerFire( 0, 2000 );
+}
+
+void MainWindow::on_triggerFire2_clicked()
+{
+    triggerFire( 1, 2000 );
 }
