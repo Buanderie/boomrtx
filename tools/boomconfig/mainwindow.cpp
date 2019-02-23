@@ -89,6 +89,11 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->deviceId, &PropertyFrame::valueUpdated, this, &MainWindow::onDeviceIDUpdate);
     connect(ui->deviceChannel, &PropertyFrame::valueUpdated, this, &MainWindow::onDeviceChannelUpdate);
     connect(ui->deviceTxPower, &PropertyFrame::valueUpdated, this, &MainWindow::onDevicePowerUpdate);
+
+    // Transmitter properties connections
+    connect(ui->targetDevice1, &PropertyFrame::valueUpdated, this, &MainWindow::onTargetDevice1Updated);
+    connect(ui->targetDevice2, &PropertyFrame::valueUpdated, this, &MainWindow::onTargetDevice2Updated);
+
 }
 
 MainWindow::~MainWindow()
@@ -262,6 +267,10 @@ void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size 
             ui->deviceId->setValueText( QString::number( _deviceId, 10 ).toUpper() );
             requestRadioChannel();
             requestRadioPower();
+            if( device_type == 0x00 )
+            {
+                updateTargetDevices();
+            }
         }
 
         ui->deviceType->setValueText(deviceTypeStr);
@@ -296,6 +305,17 @@ void MainWindow::processFrame(int opcode, uint8_t *payload, size_t payload_size 
         double radioQuality = (double)radio_quality / 255.0;
         qDebug() << "******* RADIO_QUALITY = " << radioQuality;
         ui->radioQualityProgressBar->setValue( radioQuality * 100 );
+        break;
+    }
+
+    case OP_TARGET_ID_ACK:
+    {
+        qDebug() << "Received TARGET_ID_ACK from device ID=" << (int)payload[0];
+        uint8_t device_id = payload[ 0 ];
+        uint8_t slot_idx = payload[ 1 ];
+        uint8_t target_value = payload[ 2 ];
+        qDebug() << "******* SLOT=" << (int)slot_idx << " VALUE=" << (int)target_value;
+        refreshTargetDeviceUI( slot_idx, target_value );
         break;
     }
 
@@ -349,6 +369,23 @@ void MainWindow::setDeviceChannel(uint8_t deviceChannel)
     }
 }
 
+void MainWindow::requestTargetDevice(uint8_t slot)
+{
+    uint8_t buffer[ 512 ];
+    Frame f = createGetTargetIdFrame( _deviceId, slot );
+    int bsize = frameToBuffer( f, buffer, 512 );
+    if( _serial->isWritable() )
+    {
+        _serial->write( (const char*)buffer, bsize );
+    }
+}
+
+void MainWindow::updateTargetDevices()
+{
+    requestTargetDevice( 0 );
+    requestTargetDevice( 1 );
+}
+
 void MainWindow::setDevicePower(uint8_t devicePower)
 {
     uint8_t buffer[ 512 ];
@@ -357,6 +394,42 @@ void MainWindow::setDevicePower(uint8_t devicePower)
     if( _serial->isWritable() )
     {
         print_bytes( cerr, "SET_POWER", buffer, bsize );
+        _serial->write( (const char*)buffer, bsize );
+    }
+}
+
+void MainWindow::setTargetDevice(uint8_t slot, uint8_t value)
+{
+    uint8_t buffer[ 512 ];
+    Frame f = createSetTargetIdFrame( _deviceId, slot, value );
+    int bsize = frameToBuffer( f, buffer, 512 );
+    if( _serial->isWritable() )
+    {
+        print_bytes( cerr, "SET_TARGET_DEVICE", buffer, bsize );
+        _serial->write( (const char*)buffer, bsize );
+    }
+}
+
+void MainWindow::refreshTargetDeviceUI(uint8_t slot, uint8_t value)
+{
+    if( slot == 0x00 )
+    {
+        ui->targetDevice1->setValueText( QString::number( value, 10 ).toUpper() );
+    }
+    else if( slot == 0x01 )
+    {
+        ui->targetDevice2->setValueText( QString::number( value, 10 ).toUpper() );
+    }
+}
+
+void MainWindow::triggerFire(uint8_t relay_idx, double durationMilliseconds)
+{
+    uint8_t buffer[ 32 ];
+    Frame f = createTriggerFireFrame( relay_idx, durationMilliseconds );
+    int bsize = frameToBuffer( f, buffer, 512 );
+    if( _serial->isWritable() )
+    {
+        print_bytes( cerr, "TRIGGER_FIRE", buffer, bsize );
         _serial->write( (const char*)buffer, bsize );
     }
 }
@@ -388,4 +461,49 @@ void MainWindow::onDevicePowerUpdate(const QString &valueStr)
     int pol = valueStr.toInt();
     qDebug() << "Need to update DEVICE_POWER pol=" << pol << " valueStr=" << valueStr;
     setDevicePower( pol );
+}
+
+void MainWindow::onTargetDevice1Updated(const QString &valueStr)
+{
+    int pol = valueStr.toInt();
+    qDebug() << "Need to update TARGET_DEVICE_1 pol=" << pol << " valueStr=" << valueStr;
+    setTargetDevice( 0, pol );
+}
+
+void MainWindow::onTargetDevice2Updated(const QString &valueStr)
+{
+    int pol = valueStr.toInt();
+    qDebug() << "Need to update TARGET_DEVICE_2 pol=" << pol << " valueStr=" << valueStr;
+    setTargetDevice( 1, pol );
+}
+
+// SELECT TARGET 2
+void MainWindow::on_radioSwitchTarget2_clicked()
+{
+    qDebug() << "Forcing Target #2";
+}
+
+// SELECT TARGET 1
+void MainWindow::on_radioSwitchTarget1_clicked()
+{
+    qDebug() << "Forcing Mechanical Selection";
+}
+
+void MainWindow::on_checkMechanicalSelection_stateChanged(int arg1)
+{
+    if( ui->checkMechanicalSelection->isChecked() )
+    {
+        ui->radioSwitchTarget1->setEnabled(false);
+        ui->radioSwitchTarget2->setEnabled(false);
+    }
+    else {
+        ui->radioSwitchTarget1->setEnabled(true);
+        ui->radioSwitchTarget2->setEnabled(true);
+    }
+}
+
+// TRIGGER FIRE RELAY 1
+void MainWindow::on_triggerFire1_clicked()
+{
+    triggerFire( 0, 1000 );
 }

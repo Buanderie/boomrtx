@@ -17,7 +17,10 @@ typedef enum
     OP_GET_TARGET_ID,
     OP_SET_TARGET_ID,
     OP_TARGET_ID_ACK,
-    OP_DEBUG_MESSAGE
+    OP_DEBUG_MESSAGE,
+    OP_FIRE,
+    OP_FIRE_ACK,
+    OP_TRIGGER_FIRE
 } OpCode;
 
 #endif // PROTOCOL_H

@@ -212,6 +212,31 @@ Frame createDebugMsgFrame( uint8_t device_id, const char* msg, size_t msg_len, u
   return ret;
 }
 
+Frame createFireFrame( uint8_t device_id, uint8_t output_relay_idx, double durationMilliseconds, uint8_t flags = 0x00 )
+{
+  Frame ret;
+  ret.flags = flags;
+  ret.payload_size = 3;
+  ret.payload[ 0 ] = device_id;
+  ret.payload[ 1 ] = output_relay_idx;
+  uint8_t dvalue = (uint8_t)((durationMilliseconds / 1000.0) / 0.05);
+  ret.payload[ 2 ] = dvalue;
+  ret.opcode = OP_FIRE;
+  return ret;
+}
+
+Frame createTriggerFireFrame( uint8_t output_relay_idx, double durationMilliseconds, uint8_t flags = 0x00 )
+{
+  Frame ret;
+  ret.flags = flags;
+  ret.payload_size = 2;
+  ret.payload[ 0 ] = output_relay_idx;
+  uint8_t dvalue = (uint8_t)((durationMilliseconds / 1000.0) / 0.05);
+  ret.payload[ 1 ] = dvalue;
+  ret.opcode = OP_TRIGGER_FIRE;
+  return ret;
+}
+
 size_t frameToBuffer( Frame& f, uint8_t* buffer, size_t bufferSize )
 {
     int offset = 0;

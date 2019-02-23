@@ -4,7 +4,6 @@
 // Include Scheduler since we want to manage multiple tasks.
 #include "frameparser.h"
 #include "linkquality.h"
-#include "ledtrigger.h"
 
 //
 #include "AceRoutine.h"
@@ -21,10 +20,6 @@ uint8_t __device_id = 0x01;
 uint8_t __device_type = 0x01;
 uint8_t __radioChannel = 0x05;
 uint8_t __radioPower = 0xf0;
-
-// Triggers
-#define NUM_TRIGGERS 1
-Trigger* _triggers[ NUM_TRIGGERS ];
 
 int led1 = LED_BUILTIN; // more portable
 int needBlink = 1;
@@ -117,10 +112,22 @@ COROUTINE(radioRxRoutine) {
                 Frame f = radioFrameParser.getFrame();
                 if( f.opcode == OP_PING )
                 {
+                  uint8_t target_device_id = f.payload[ 0 ];
+                  if( target_device_id == 0xff || target_device_id == __device_id )
+                  {
                     Frame pongFrame = createPongFrame( __device_id, __device_type );
                     int bsize = frameToBuffer( pongFrame, buf, 32 );
                     Serial1.write( buf, bsize );
                     activityBlink();
+                  }
+                }
+                else if( f.opcode == OP_FIRE )
+                {
+                  uint8_t target_device_id = f.payload[ 0 ];
+                  if( target_device_id == __device_id )
+                  {
+                    needBlink = !needBlink;
+                  }
                 }
                 COROUTINE_YIELD();
             }
@@ -129,21 +136,7 @@ COROUTINE(radioRxRoutine) {
     }
 }
 
-// Task no.4: Check for Trigger states
-COROUTINE(triggerCheckRoutine) {
-    COROUTINE_LOOP() {
-		
-        COROUTINE_YIELD();
-    }
-}
-
 void setup() {
-
-	// Initialize triggers
-	for( int i = 0; i < NUM_TRIGGERS; ++i )
-	{
-		_triggers[i] = new LedTrigger();
-	}
 
     // Retrieve config from EEPROM
     __device_id = EEPROM.read(0x00);

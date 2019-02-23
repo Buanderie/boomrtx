@@ -115,7 +115,7 @@
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -156,16 +156,26 @@
           </property>
           <layout class="QGridLayout" name="gridLayout_5">
            <item row="0" column="0">
-            <widget class="QRadioButton" name="radioButton">
+            <widget class="QRadioButton" name="radioSwitchTarget1">
              <property name="text">
               <string>Target #1</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QRadioButton" name="radioButton_2">
+            <widget class="QRadioButton" name="radioSwitchTarget2">
              <property name="text">
               <string>Target #2</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="checkMechanicalSelection">
+             <property name="text">
+              <string>CheckBox</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -198,14 +208,14 @@
           </property>
           <layout class="QGridLayout" name="gridLayout_6">
            <item row="0" column="0">
-            <widget class="QPushButton" name="pushButton">
+            <widget class="QPushButton" name="triggerFire1">
              <property name="text">
               <string>Trigger Relay #1</string>
              </property>
             </widget>
            </item>
            <item row="0" column="1">
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QPushButton" name="triggerFire2">
              <property name="text">
               <string>Trigger Relay #2</string>
              </property>

@@ -41,6 +41,17 @@ private slots:
     void onDeviceChannelUpdate( const QString& valueStr );
     void onDevicePowerUpdate( const QString& valueStr );
 
+    void onTargetDevice1Updated( const QString& valueStr );
+    void onTargetDevice2Updated( const QString& valueStr );
+
+    void on_radioSwitchTarget2_clicked();
+
+    void on_radioSwitchTarget1_clicked();
+
+    void on_checkMechanicalSelection_stateChanged(int arg1);
+
+    void on_triggerFire1_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -69,7 +80,15 @@ private:
 
     void setDeviceId(uint8_t deviceId);
     void setDeviceChannel(uint8_t deviceChannel);
+
+    void requestTargetDevice( uint8_t slot );
+    void updateTargetDevices();
     void setDevicePower(uint8_t devicePower);
+    void setTargetDevice( uint8_t slot, uint8_t value );
+    void refreshTargetDeviceUI( uint8_t slot, uint8_t value );
+
+    void triggerFire(uint8_t relay_idx, double durationMilliseconds);
+
 };
 
 #endif // MAINWINDOW_H

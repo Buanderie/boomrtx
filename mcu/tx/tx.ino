@@ -54,7 +54,7 @@ void activityBlink()
 COROUTINE(pingRoutine) {
     COROUTINE_LOOP() {
         uint8_t buf[ 32 ];
-        Frame pongFrame = createPingFrame( __device_type );
+        Frame pongFrame = createPingFrame( __targetDeviceIds[ __targetDeviceSlot ] );
         int bsize = frameToBuffer( pongFrame, buf, 32 );
         Serial1.write( buf, bsize );
         linkQuality.pushPing();
@@ -74,10 +74,13 @@ COROUTINE(configRoutine) {
                 // If received PING, send PONG
                 if( f.opcode == OP_PING )
                 {
-                    Frame pongFrame = createPongFrame( __device_id, __device_type );
-                    int bsize = frameToBuffer( pongFrame, buf, 32 );
-                    Serial.write( buf, bsize );
-                    // activityBlink();
+                    uint8_t target_device_id = f.payload[ 0 ];
+                    if( target_device_id == 0xff || target_device_id == __device_id )
+                    {
+                      Frame pongFrame = createPongFrame( __device_id, __device_type );
+                      int bsize = frameToBuffer( pongFrame, buf, 32 );
+                      Serial.write( buf, bsize );
+                    }
                 }
                 else if( f.opcode == OP_SET_DEVICE_ID )
                 {
@@ -128,7 +131,7 @@ COROUTINE(configRoutine) {
                 {
                   uint8_t targetIdx = 0xff;
                   int slot = f.payload[ 1 ];
-                  if( slot < NUM_TARGET_DEVICES - 1 )
+                  if( slot < NUM_TARGET_DEVICES )
                   {
                     targetIdx = __targetDeviceIds[ slot ];
                   }
@@ -141,14 +144,24 @@ COROUTINE(configRoutine) {
                   int slot = f.payload[ 1 ];
                   uint8_t value = f.payload[ 2 ];
                   uint8_t retValue = 0xff;
-                  if( slot < NUM_TARGET_DEVICES - 1 )
+                  if( slot < NUM_TARGET_DEVICES )
                   {
                     __targetDeviceIds[ slot ] = value;
                     EEPROM.write( TARGET_DEVICES_EEPROM_ADDR + slot, value );
+                    retValue = __targetDeviceIds[ slot ];
                   }
                   Frame targetIdAckFrame = createTargetIdAckFrame( __device_id, slot, retValue );
                   int bsize = frameToBuffer( targetIdAckFrame, buf, 32 );
                   Serial.write( buf, bsize );
+                }
+                else if( f.opcode == OP_TRIGGER_FIRE )
+                {
+                  int output_relay = f.payload[ 0 ];
+                  uint8_t value = f.payload[ 1 ];
+                  double valueMs = ((double)value * 0.05) * 1000.0;
+                  Frame ff = createFireFrame( __targetDeviceIds[ __targetDeviceSlot ], output_relay, valueMs );
+                  int bsize = frameToBuffer( ff, buf, 32 );
+                  Serial1.write( buf, bsize );
                 }
             }
             // COROUTINE_DELAY(20);

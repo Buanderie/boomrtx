@@ -33,8 +33,8 @@ add_custom_target( mcu_tx DEPENDS ${ALL_DEPS} SOURCES ${ALL_SRC} )
 file( COPY ${ALL_SRC} DESTINATION ${PROJECT_BINARY_DIR} )
 
 add_custom_command( TARGET mcu_tx
-                                        POST_BUILD
-                                        COMMAND ${ARDUINO_BINARY} --verify ${PROJECT_BINARY_DIR}/rx.ino --board teensy:avr:teensypp2:speed=16 -v )
+                    POST_BUILD
+                    COMMAND ${ARDUINO_BINARY} --verify ${PROJECT_BINARY_DIR}/tx.ino --board teensy:avr:teensypp2:speed=16 -v )
 
 # add_custom_command( TARGET mcu_tx
 # 					POST_BUILD
