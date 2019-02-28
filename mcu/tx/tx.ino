@@ -1,17 +1,21 @@
 
+// Defines
+#define NUM_TARGET_DEVICES 2
+#define USE_HC12
+#define TARGET_DEVICES_EEPROM_ADDR 0x0100
+
 #include <EEPROM.h>
 
 // Include Scheduler since we want to manage multiple tasks.
 #include "frameparser.h"
 #include "linkquality.h"
+#ifdef USE_HC12
+#include "HC12.h"
+#endif
 
 //
 #include "AceRoutine.h"
 using namespace ace_routine;
-
-// Defines
-#define NUM_TARGET_DEVICES 2
-#define TARGET_DEVICES_EEPROM_ADDR 0x0100
 
 // Config interface
 FrameParser configFrameParser;
@@ -36,6 +40,13 @@ int led1 = LED_BUILTIN; // more portable
 int needBlink = 1;
 bool ledState = false;
 
+#ifdef USE_HC12
+HC12 __hc12( &Serial1, 2 ); // Set Pin is 2, check RX schematics
+Stream * __radioInterface = &__hc12;
+#else
+Stream * __radioInterface = &Serial1;
+#endif
+
 void activityBlink()
 {
     if( needBlink == 0 )
@@ -57,7 +68,7 @@ COROUTINE(pingRoutine) {
         uint8_t buf[ 32 ];
         Frame pongFrame = createPingFrame( __targetDeviceIds[ __targetDeviceSlot ] );
         int bsize = frameToBuffer( pongFrame, buf, 32 );
-        Serial1.write( buf, bsize );
+        __radioInterface->write( buf, bsize );
         linkQuality.pushPing();
         COROUTINE_DELAY(100);
     }
@@ -162,7 +173,7 @@ COROUTINE(configRoutine) {
                   double valueMs = ((double)value * 0.05) * 1000.0;
                   Frame ff = createFireFrame( __targetDeviceIds[ __targetDeviceSlot ], output_relay, valueMs );
                   int bsize = frameToBuffer( ff, buf, 32 );
-                  Serial1.write( buf, bsize );
+                  __radioInterface->write( buf, bsize );
                 }
                 else if( f.opcode == OP_TX_TOGGLE_MECHANICAL_TARGET_SELECTION )
                 {
@@ -210,8 +221,8 @@ COROUTINE(checkQualityRoutine) {
 // Task no.3: accept commands from RADIO serial port
 COROUTINE(radioRxRoutine) {
     COROUTINE_LOOP() {
-        while (Serial1.available()) {
-            char c = Serial1.read();
+        while (__radioInterface->available()) {
+            char c = __radioInterface->read();
             if( radioFrameParser.addByte( c ) )
             {
                 uint8_t buf[ 32 ];
@@ -250,7 +261,11 @@ void setup() {
     }
 
     Serial.begin(9600);
+    #ifdef USE_HC12
+    // Nothing !
+    #else
     Serial1.begin(9600);
+    #endif
 
     // Setup the 3 pins as OUTPUT
     pinMode(led1, OUTPUT);

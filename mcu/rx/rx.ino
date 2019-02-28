@@ -1,17 +1,23 @@
 
 #include <EEPROM.h>
 
+// Defines
+#define NUM_RELAYS 2
+#define USE_HC12
+
 // Include Scheduler since we want to manage multiple tasks.
 #include "frameparser.h"
 #include "linkquality.h"
 #include "ledtrigger.h"
+#include "relaytrigger.h"
+
+#ifdef USE_HC12
+#include "HC12.h"
+#endif
 
 //
 #include "AceRoutine.h"
 using namespace ace_routine;
-
-// Defines
-#define NUM_RELAYS 2
 
 // Triggers
 Trigger * __triggers[ NUM_RELAYS ];
@@ -31,6 +37,13 @@ uint8_t __radioPower = 0xf0;
 int led1 = LED_BUILTIN; // more portable
 int needBlink = 1;
 bool ledState = false;
+
+#ifdef USE_HC12
+HC12 __hc12( &Serial1, 2 ); // Set Pin is 2, check RX schematics
+Stream * __radioInterface = &__hc12;
+#else
+Stream * __radioInterface = &Serial1;
+#endif
 
 void activityBlink()
 {
@@ -112,8 +125,8 @@ COROUTINE(configRoutine) {
 // Task no.3: accept commands from RADIO serial port
 COROUTINE(radioRxRoutine) {
     COROUTINE_LOOP() {
-        while (Serial1.available()) {
-            char c = Serial1.read();
+        while (__radioInterface->available()) {
+            char c = __radioInterface->read();
             if( radioFrameParser.addByte( c ) )
             {
                 uint8_t buf[ 32 ];
@@ -125,7 +138,7 @@ COROUTINE(radioRxRoutine) {
                   {
                     Frame pongFrame = createPongFrame( __device_id, __device_type );
                     int bsize = frameToBuffer( pongFrame, buf, 32 );
-                    Serial1.write( buf, bsize );
+                    __radioInterface->write( buf, bsize );
                     activityBlink();
                   }
                 }
@@ -159,7 +172,7 @@ COROUTINE(triggerTickRoutine) {
         t->tick();
         Frame fack = createFireAckFrame( __device_id, (uint8_t)i, t->isActive() );
         int bsize = frameToBuffer( fack, buf, 32 );
-        Serial1.write( buf, bsize );
+        __radioInterface->write( buf, bsize );
       }
       COROUTINE_DELAY(50);
     }
@@ -177,9 +190,10 @@ COROUTINE(debug) {
 void setup() {
 
     // Initialize triggers
+    const int relayPinOffset = 22; // See wiring schematics for RX side
     for( int i = 0; i < NUM_RELAYS; ++i )
     {
-      __triggers[ i ] = new LEDTrigger( LED_BUILTIN );
+      __triggers[ i ] = new RelayTrigger( i + relayPinOffset );
     }
 
     // Retrieve config from EEPROM
@@ -188,7 +202,12 @@ void setup() {
     __radioPower = EEPROM.read(0x02);
 
     Serial.begin(9600);
+
+    #ifdef USE_HC12
+    // Nothing !
+    #else
     Serial1.begin(9600);
+    #endif
 
     // Setup the 3 pins as OUTPUT
     pinMode(led1, OUTPUT);
