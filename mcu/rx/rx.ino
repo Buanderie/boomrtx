@@ -40,13 +40,11 @@ void activityBlink()
         return;
     }
 
-/*
     ledState = !ledState;
     if( ledState )
         digitalWrite(led1, HIGH);
     else
         digitalWrite(led1, LOW);
-*/
 
 }
 
@@ -146,10 +144,9 @@ COROUTINE(radioRxRoutine) {
                     }
                   }
                 }
-                COROUTINE_YIELD();
             }
-            COROUTINE_YIELD();
         }
+        COROUTINE_YIELD();
     }
 }
 
@@ -167,6 +164,15 @@ COROUTINE(triggerTickRoutine) {
       COROUTINE_DELAY(50);
     }
 }
+
+/*
+COROUTINE(debug) {
+    COROUTINE_LOOP() {
+      activityBlink();
+      COROUTINE_DELAY(150);
+    }
+}
+*/
 
 void setup() {
 
