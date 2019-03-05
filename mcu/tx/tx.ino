@@ -1,5 +1,8 @@
 
 // Defines
+#define TRIGGER_DURATION_MS 2000
+#define QUALITY_LED_PIN 3
+#define FIRE_ACK_LED_PIN 4
 #define NUM_TARGET_DEVICES 2
 #define USE_HC12
 #define TARGET_DEVICES_EEPROM_ADDR 0x0100
@@ -32,6 +35,7 @@ uint8_t __radioPower = 0xf0;
 bool __useMechanicalTargetSelection = true;
 uint8_t __targetDeviceIds[ NUM_TARGET_DEVICES ];
 uint8_t __targetDeviceSlot = 0;
+uint8_t __targetRelay = 0;
 
 // Link Quality measure
 LinkQuality< 40 > linkQuality;
@@ -211,10 +215,62 @@ COROUTINE(configRoutine) {
 COROUTINE(checkQualityRoutine) {
     COROUTINE_LOOP() {
         if( linkQuality.quality() > 0.8 )
-          digitalWrite(led1, HIGH);
+          digitalWrite(QUALITY_LED_PIN, HIGH);
         else
-          digitalWrite(led1, LOW);
+          digitalWrite(QUALITY_LED_PIN, LOW);
         COROUTINE_DELAY(50);
+    }
+}
+
+// Task...
+COROUTINE(checkSwitchesRoutine) {
+    COROUTINE_LOOP() {
+        if( digitalRead(12) == HIGH )
+        {
+          // Nothing
+        }
+        else
+        {
+          // FIRE !
+          uint8_t buf[ 32 ];
+          Frame ff = createFireFrame( __targetDeviceIds[ __targetDeviceSlot ], __targetRelay, TRIGGER_DURATION_MS );
+          int bsize = frameToBuffer( ff, buf, 32 );
+          __radioInterface->write( buf, bsize );
+        }
+
+        if( digitalRead(22) == HIGH )
+        {
+          // TARGET 1
+          // digitalWrite(4, HIGH);
+          if( __useMechanicalTargetSelection )
+          {
+            __targetDeviceSlot = 0;
+          }
+        }
+        else
+        {
+          // TARGET 2
+          // digitalWrite(4, LOW);
+          if( __useMechanicalTargetSelection )
+          {
+            __targetDeviceSlot = 1;
+          }
+        }
+
+        if( digitalRead(23) == HIGH )
+        {
+          // RELAY 1
+          // digitalWrite(led1, HIGH);
+          __targetRelay = 0;
+        }
+        else
+        {
+          // RELAY 2
+          // digitalWrite(led1, LOW);
+          __targetRelay = 1;
+        }
+
+        COROUTINE_YIELD();
     }
 }
 
@@ -234,11 +290,25 @@ COROUTINE(radioRxRoutine) {
                 else if( f.opcode == OP_FIRE_ACK )
                 {
                   uint8_t device_id = f.payload[ 0 ];
+                  uint8_t relay_slot = f.payload[ 1 ];
+                  uint8_t is_active = f.payload[ 2 ];
                   if( device_id == __targetDeviceIds[ __targetDeviceSlot ] )
                   {
                     // Relay to config interface...
                     int bsize = frameToBuffer( f, buf, 32 );
                     Serial.write( buf, bsize );
+                    if( is_active > 0 && relay_slot == __targetRelay )
+                    {
+                      // Light up RED
+                      digitalWrite( FIRE_ACK_LED_PIN, HIGH );
+                    }
+                    else
+                    {
+                      if( is_active == 0 )
+                      {
+                        digitalWrite( FIRE_ACK_LED_PIN, LOW );
+                      }
+                    }
                   }
                 }
             }
@@ -248,6 +318,20 @@ COROUTINE(radioRxRoutine) {
 }
 
 void setup() {
+
+    // Set-up switches
+    // FIRE BUTTON
+    pinMode( 12, INPUT_PULLUP);
+
+    // TARGET SELECT
+    pinMode( 22, INPUT_PULLUP);
+
+    // RELAY SELECT
+    pinMode( 23, INPUT_PULLUP);
+
+    // Set-up LEDS
+    pinMode( 3, OUTPUT );
+    pinMode( 4, OUTPUT );
 
     // Retrieve config from EEPROM
     __device_id = EEPROM.read(0x00);

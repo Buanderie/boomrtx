@@ -190,7 +190,7 @@ COROUTINE(debug) {
 void setup() {
 
     // Initialize triggers
-    const int relayPinOffset = 22; // See wiring schematics for RX side
+    const int relayPinOffset = 21; // See wiring schematics for RX side
     for( int i = 0; i < NUM_RELAYS; ++i )
     {
       __triggers[ i ] = new RelayTrigger( i + relayPinOffset );
