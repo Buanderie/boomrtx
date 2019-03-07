@@ -11,7 +11,7 @@ public:
   {
     // Start deactivated
     pinMode( _relayPin, OUTPUT );
-    digitalWrite( _relayPin, LOW ); // WARNING: Start ON when LOW
+    digitalWrite( _relayPin, HIGH ); // WARNING: Start ON when LOW
   }
 
   virtual ~RelayTrigger()

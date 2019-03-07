@@ -1,6 +1,6 @@
 
 // Defines
-#define TRIGGER_DURATION_MS 2000
+#define TRIGGER_DURATION_MS 1000
 #define QUALITY_LED_PIN 3
 #define FIRE_ACK_LED_PIN 4
 #define NUM_TARGET_DEVICES 2
@@ -36,6 +36,8 @@ bool __useMechanicalTargetSelection = true;
 uint8_t __targetDeviceIds[ NUM_TARGET_DEVICES ];
 uint8_t __targetDeviceSlot = 0;
 uint8_t __targetRelay = 0;
+uint8_t __radioLinkOK = 0;
+uint8_t __fireLEDON = 0;
 
 // Link Quality measure
 LinkQuality< 40 > linkQuality;
@@ -177,6 +179,10 @@ COROUTINE(configRoutine) {
                   double valueMs = ((double)value * 0.05) * 1000.0;
                   Frame ff = createFireFrame( __targetDeviceIds[ __targetDeviceSlot ], output_relay, valueMs );
                   int bsize = frameToBuffer( ff, buf, 32 );
+                  if( !__useMechanicalTargetSelection )
+                  {
+                    __targetRelay = output_relay;
+                  }
                   __radioInterface->write( buf, bsize );
                 }
                 else if( f.opcode == OP_TX_TOGGLE_MECHANICAL_TARGET_SELECTION )
@@ -215,9 +221,17 @@ COROUTINE(configRoutine) {
 COROUTINE(checkQualityRoutine) {
     COROUTINE_LOOP() {
         if( linkQuality.quality() > 0.8 )
-          digitalWrite(QUALITY_LED_PIN, HIGH);
+        {
+          if( __radioLinkOK != 1 )
+            digitalWrite(QUALITY_LED_PIN, HIGH);
+          __radioLinkOK = 1;
+        }
         else
-          digitalWrite(QUALITY_LED_PIN, LOW);
+        {
+          if( __radioLinkOK != 0 )
+            digitalWrite(QUALITY_LED_PIN, LOW);
+          __radioLinkOK = 0;
+        }
         COROUTINE_DELAY(50);
     }
 }
@@ -235,7 +249,10 @@ COROUTINE(checkSwitchesRoutine) {
           uint8_t buf[ 32 ];
           Frame ff = createFireFrame( __targetDeviceIds[ __targetDeviceSlot ], __targetRelay, TRIGGER_DURATION_MS );
           int bsize = frameToBuffer( ff, buf, 32 );
-          __radioInterface->write( buf, bsize );
+          if( __radioLinkOK == 1 )
+          {
+            __radioInterface->write( buf, bsize );
+          }
         }
 
         if( digitalRead(22) == HIGH )
@@ -260,14 +277,14 @@ COROUTINE(checkSwitchesRoutine) {
         if( digitalRead(23) == HIGH )
         {
           // RELAY 1
-          // digitalWrite(led1, HIGH);
-          __targetRelay = 0;
+          if( __useMechanicalTargetSelection )
+            __targetRelay = 0;
         }
         else
         {
           // RELAY 2
-          // digitalWrite(led1, LOW);
-          __targetRelay = 1;
+          if( __useMechanicalTargetSelection )
+            __targetRelay = 1;
         }
 
         COROUTINE_YIELD();
@@ -285,7 +302,11 @@ COROUTINE(radioRxRoutine) {
                 Frame f = radioFrameParser.getFrame();
                 if( f.opcode == OP_PONG )
                 {
-                  linkQuality.pushPong();
+                  uint8_t device_id = __targetDeviceIds[ __targetDeviceSlot ];
+                  if( device_id == __targetDeviceIds[ __targetDeviceSlot ] )
+                  {
+                    linkQuality.pushPong();
+                  }
                 }
                 else if( f.opcode == OP_FIRE_ACK )
                 {
@@ -300,13 +321,17 @@ COROUTINE(radioRxRoutine) {
                     if( is_active > 0 && relay_slot == __targetRelay )
                     {
                       // Light up RED
-                      digitalWrite( FIRE_ACK_LED_PIN, HIGH );
+                      if( __fireLEDON != 1 )
+                        digitalWrite( FIRE_ACK_LED_PIN, HIGH );
+                      __fireLEDON = 1;
                     }
                     else
                     {
                       if( is_active == 0 )
                       {
-                        digitalWrite( FIRE_ACK_LED_PIN, LOW );
+                        if( __fireLEDON != 0 )
+                          digitalWrite( FIRE_ACK_LED_PIN, LOW );
+                        __fireLEDON = 0;
                       }
                     }
                   }

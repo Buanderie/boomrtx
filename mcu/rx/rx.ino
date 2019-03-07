@@ -136,10 +136,11 @@ COROUTINE(radioRxRoutine) {
                   uint8_t target_device_id = f.payload[ 0 ];
                   if( target_device_id == 0xff || target_device_id == __device_id )
                   {
+                    activityBlink();
                     Frame pongFrame = createPongFrame( __device_id, __device_type );
                     int bsize = frameToBuffer( pongFrame, buf, 32 );
                     __radioInterface->write( buf, bsize );
-                    activityBlink();
+
                   }
                 }
                 else if( f.opcode == OP_FIRE )
