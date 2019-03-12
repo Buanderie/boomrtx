@@ -1,0 +1,33 @@
+# MSC for some fictional process
+msc {
+
+  hscale = "1";
+
+  TRANSMITTER,RECEIVER;
+
+  TRANSMITTER=>RECEIVER [ label = "OP_PING" ] ;
+  TRANSMITTER->TRANSMITTER [ label = "increment PING count" ] ;
+  ...;
+
+  RECEIVER=>TRANSMITTER [ label = "OP_PONG"];
+  TRANSMITTER->TRANSMITTER [ label = "increment PONG count\n radio_quality=PONG_COUNT/PING_COUNT" ] ;
+  ...;
+  ...;
+  ...;
+
+  ---  [ label = "Quality decreases if PONG packets get lost" ];
+  TRANSMITTER=>RECEIVER [ label = "OP_PING" ] ;
+  TRANSMITTER->TRANSMITTER [ label = "increment PING count" ] ;
+  RECEIVER-xTRANSMITTER [ label = "OP_PONG"];
+  ...;
+  ...;
+  ...;
+
+  ---  [ label = "Quality decreases if PING packets get lost" ];
+  TRANSMITTER-xRECEIVER [ label = "OP_PING" ] ;
+  TRANSMITTER->TRANSMITTER [ label = "increment PING count" ] ;
+  ...;
+  ...;
+
+
+}
