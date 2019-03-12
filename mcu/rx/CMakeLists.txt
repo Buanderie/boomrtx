@@ -2,7 +2,7 @@
 Project(BOOMRTX_RX)
 
 # Sketch source file
-set( SKETCH_SRC "${PROJECT_SOURCE_DIR}/rx.ino;${PROJECT_SOURCE_DIR}/trigger.h;${PROJECT_SOURCE_DIR}/ledtrigger.h" )
+set( SKETCH_SRC "${PROJECT_SOURCE_DIR}/rx.ino;${PROJECT_SOURCE_DIR}/trigger.h;${PROJECT_SOURCE_DIR}/ledtrigger.h;${PROJECT_SOURCE_DIR}/relaytrigger.h" )
 
 # Find common source files
 file( GLOB BOOMRTX_COMMON_CPP ${BOOMRTX_SOURCE_DIR}/common/*.cpp )

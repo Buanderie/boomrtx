@@ -1,17 +1,24 @@
 
+// Defines
+#define TRIGGER_DURATION_MS 1000
+#define QUALITY_LED_PIN 3
+#define FIRE_ACK_LED_PIN 4
+#define NUM_TARGET_DEVICES 2
+#define USE_HC12
+#define TARGET_DEVICES_EEPROM_ADDR 0x0100
+
 #include <EEPROM.h>
 
 // Include Scheduler since we want to manage multiple tasks.
 #include "frameparser.h"
 #include "linkquality.h"
+#ifdef USE_HC12
+#include "HC12.h"
+#endif
 
 //
 #include "AceRoutine.h"
 using namespace ace_routine;
-
-// Defines
-#define NUM_TARGET_DEVICES 2
-#define TARGET_DEVICES_EEPROM_ADDR 0x0100
 
 // Config interface
 FrameParser configFrameParser;
@@ -28,6 +35,9 @@ uint8_t __radioPower = 0xf0;
 bool __useMechanicalTargetSelection = true;
 uint8_t __targetDeviceIds[ NUM_TARGET_DEVICES ];
 uint8_t __targetDeviceSlot = 0;
+uint8_t __targetRelay = 0;
+uint8_t __radioLinkOK = 0;
+uint8_t __fireLEDON = 0;
 
 // Link Quality measure
 LinkQuality< 40 > linkQuality;
@@ -35,6 +45,13 @@ LinkQuality< 40 > linkQuality;
 int led1 = LED_BUILTIN; // more portable
 int needBlink = 1;
 bool ledState = false;
+
+#ifdef USE_HC12
+HC12 __hc12( &Serial1, 2 ); // Set Pin is 2, check RX schematics
+Stream * __radioInterface = &__hc12;
+#else
+Stream * __radioInterface = &Serial1;
+#endif
 
 void activityBlink()
 {
@@ -57,7 +74,7 @@ COROUTINE(pingRoutine) {
         uint8_t buf[ 32 ];
         Frame pongFrame = createPingFrame( __targetDeviceIds[ __targetDeviceSlot ] );
         int bsize = frameToBuffer( pongFrame, buf, 32 );
-        Serial1.write( buf, bsize );
+        __radioInterface->write( buf, bsize );
         linkQuality.pushPing();
         COROUTINE_DELAY(100);
     }
@@ -162,7 +179,11 @@ COROUTINE(configRoutine) {
                   double valueMs = ((double)value * 0.05) * 1000.0;
                   Frame ff = createFireFrame( __targetDeviceIds[ __targetDeviceSlot ], output_relay, valueMs );
                   int bsize = frameToBuffer( ff, buf, 32 );
-                  Serial1.write( buf, bsize );
+                  if( !__useMechanicalTargetSelection )
+                  {
+                    __targetRelay = output_relay;
+                  }
+                  __radioInterface->write( buf, bsize );
                 }
                 else if( f.opcode == OP_TX_TOGGLE_MECHANICAL_TARGET_SELECTION )
                 {
@@ -200,34 +221,119 @@ COROUTINE(configRoutine) {
 COROUTINE(checkQualityRoutine) {
     COROUTINE_LOOP() {
         if( linkQuality.quality() > 0.8 )
-          digitalWrite(led1, HIGH);
+        {
+          if( __radioLinkOK != 1 )
+            digitalWrite(QUALITY_LED_PIN, HIGH);
+          __radioLinkOK = 1;
+        }
         else
-          digitalWrite(led1, LOW);
+        {
+          if( __radioLinkOK != 0 )
+            digitalWrite(QUALITY_LED_PIN, LOW);
+          __radioLinkOK = 0;
+        }
         COROUTINE_DELAY(50);
+    }
+}
+
+// Task...
+COROUTINE(checkSwitchesRoutine) {
+    COROUTINE_LOOP() {
+        if( digitalRead(12) == HIGH )
+        {
+          // Nothing
+        }
+        else
+        {
+          // FIRE !
+          uint8_t buf[ 32 ];
+          Frame ff = createFireFrame( __targetDeviceIds[ __targetDeviceSlot ], __targetRelay, TRIGGER_DURATION_MS );
+          int bsize = frameToBuffer( ff, buf, 32 );
+          if( __radioLinkOK == 1 )
+          {
+            __radioInterface->write( buf, bsize );
+          }
+        }
+
+        if( digitalRead(22) == HIGH )
+        {
+          // TARGET 1
+          // digitalWrite(4, HIGH);
+          if( __useMechanicalTargetSelection )
+          {
+            __targetDeviceSlot = 0;
+          }
+        }
+        else
+        {
+          // TARGET 2
+          // digitalWrite(4, LOW);
+          if( __useMechanicalTargetSelection )
+          {
+            __targetDeviceSlot = 1;
+          }
+        }
+
+        if( digitalRead(23) == HIGH )
+        {
+          // RELAY 1
+          if( __useMechanicalTargetSelection )
+            __targetRelay = 0;
+        }
+        else
+        {
+          // RELAY 2
+          if( __useMechanicalTargetSelection )
+            __targetRelay = 1;
+        }
+
+        COROUTINE_YIELD();
     }
 }
 
 // Task no.3: accept commands from RADIO serial port
 COROUTINE(radioRxRoutine) {
     COROUTINE_LOOP() {
-        while (Serial1.available()) {
-            char c = Serial1.read();
+        while (__radioInterface->available()) {
+            char c = __radioInterface->read();
             if( radioFrameParser.addByte( c ) )
             {
                 uint8_t buf[ 32 ];
                 Frame f = radioFrameParser.getFrame();
                 if( f.opcode == OP_PONG )
                 {
-                  linkQuality.pushPong();
+                  uint8_t device_id = __targetDeviceIds[ __targetDeviceSlot ];
+                  if( device_id == __targetDeviceIds[ __targetDeviceSlot ] )
+                  {
+                    linkQuality.pushPong();
+                  }
                 }
                 else if( f.opcode == OP_FIRE_ACK )
                 {
                   uint8_t device_id = f.payload[ 0 ];
+                  uint8_t relay_slot = f.payload[ 1 ];
+                  uint8_t is_active = f.payload[ 2 ];
                   if( device_id == __targetDeviceIds[ __targetDeviceSlot ] )
                   {
                     // Relay to config interface...
                     int bsize = frameToBuffer( f, buf, 32 );
                     Serial.write( buf, bsize );
+                    if( is_active > 0 && relay_slot == __targetRelay )
+                    {
+                      // Light up RED
+                      if( __fireLEDON != 1 )
+                        digitalWrite( FIRE_ACK_LED_PIN, HIGH );
+                      __fireLEDON = 1;
+                    }
+                    else
+                    {
+                      if( is_active == 0 )
+                      {
+                        if( __fireLEDON != 0 )
+                          digitalWrite( FIRE_ACK_LED_PIN, LOW );
+                        __fireLEDON = 0;
+                      }
+                    }
                   }
                 }
             }
@@ -237,6 +343,20 @@ COROUTINE(radioRxRoutine) {
 }
 
 void setup() {
+
+    // Set-up switches
+    // FIRE BUTTON
+    pinMode( 12, INPUT_PULLUP);
+
+    // TARGET SELECT
+    pinMode( 22, INPUT_PULLUP);
+
+    // RELAY SELECT
+    pinMode( 23, INPUT_PULLUP);
+
+    // Set-up LEDS
+    pinMode( 3, OUTPUT );
+    pinMode( 4, OUTPUT );
 
     // Retrieve config from EEPROM
     __device_id = EEPROM.read(0x00);
@@ -250,7 +370,11 @@ void setup() {
     }
 
     Serial.begin(9600);
+    #ifdef USE_HC12
+    // Nothing !
+    #else
     Serial1.begin(9600);
+    #endif
 
     // Setup the 3 pins as OUTPUT
     pinMode(led1, OUTPUT);
