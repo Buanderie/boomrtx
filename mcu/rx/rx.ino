@@ -133,6 +133,7 @@ COROUTINE(radioRxRoutine) {
                 Frame f = radioFrameParser.getFrame();
                 if( f.opcode == OP_PING )
                 {
+                  activityBlink();
                   uint8_t target_device_id = f.payload[ 0 ];
                   if( target_device_id == 0xff || target_device_id == __device_id )
                   {
@@ -171,9 +172,11 @@ COROUTINE(triggerTickRoutine) {
       {
         Trigger * t = __triggers[ i ];
         t->tick();
+        /*
         Frame fack = createFireAckFrame( __device_id, (uint8_t)i, t->isActive() );
         int bsize = frameToBuffer( fack, buf, 32 );
         __radioInterface->write( buf, bsize );
+        */
       }
       COROUTINE_DELAY(50);
     }
