@@ -3,7 +3,7 @@
 
 // Defines
 #define NUM_RELAYS 2
-#define USE_HC12
+// #define USE_HC12
 
 // Include Scheduler since we want to manage multiple tasks.
 #include "frameparser.h"
@@ -141,7 +141,13 @@ COROUTINE(radioRxRoutine) {
                     Frame pongFrame = createPongFrame( __device_id, __device_type );
                     int bsize = frameToBuffer( pongFrame, buf, 32 );
                     __radioInterface->write( buf, bsize );
-
+                    for( int i = 0; i < NUM_RELAYS; ++i )
+                    {
+                      Trigger * t = __triggers[ i ];
+                      Frame fack = createFireAckFrame( __device_id, (uint8_t)i, t->isActive() );
+                      int bsize = frameToBuffer( fack, buf, 32 );
+                      __radioInterface->write( buf, bsize );
+                    }
                   }
                 }
                 else if( f.opcode == OP_FIRE )
