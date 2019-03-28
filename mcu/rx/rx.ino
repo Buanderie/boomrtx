@@ -93,12 +93,20 @@ COROUTINE(configRoutine) {
                 }
                 else if( f.opcode == OP_SET_RADIO_CHANNEL )
                 {
-                    __radioChannel = f.payload[1];
-                    EEPROM.write( 0x01, __radioChannel );
-                    Frame radioChannelAckFrame = createRadioChannelAckFrame( __device_id, __radioChannel );
-                    int bsize = frameToBuffer( radioChannelAckFrame, buf, 32 );
-                    Serial.write( buf, bsize );
-                    // activityBlink();
+                  __radioChannel = f.payload[1];
+
+                  if( __radioChannel > 127 || __radioChannel < 1 )
+                    __radioChannel = 1;
+
+                  EEPROM.write( 0x01, __radioChannel );
+                  Frame radioChannelAckFrame = createRadioChannelAckFrame( __device_id, __radioChannel );
+                  int bsize = frameToBuffer( radioChannelAckFrame, buf, 32 );
+                  Serial.write( buf, bsize );
+
+                  #ifdef USE_HC12
+                  HC12 * hc12 = (HC12*)__radioInterface;
+                  hc12->setChannel( __radioChannel );
+                  #endif
                 }
                 else if( f.opcode == OP_GET_RADIO_POWER )
                 {
@@ -109,12 +117,20 @@ COROUTINE(configRoutine) {
                 }
                 else if( f.opcode == OP_SET_RADIO_POWER )
                 {
-                    __radioPower = f.payload[1];
-                    EEPROM.write( 0x02, __radioPower );
-                    Frame radioPowerAckFrame = createRadioPowerAckFrame( __device_id, __radioPower );
-                    int bsize = frameToBuffer( radioPowerAckFrame, buf, 32 );
-                    Serial.write( buf, bsize );
-                    // activityBlink();
+                  __radioPower = f.payload[1];
+
+                  if( __radioPower > 8 || __radioPower < 1 )
+                    __radioPower = 8;
+
+                  EEPROM.write( 0x02, __radioPower );
+                  Frame radioPowerAckFrame = createRadioPowerAckFrame( __device_id, __radioPower );
+                  int bsize = frameToBuffer( radioPowerAckFrame, buf, 32 );
+                  Serial.write( buf, bsize );
+
+                  #ifdef USE_HC12
+                  HC12 * hc12 = (HC12*)__radioInterface;
+                  hc12->setPowerLevel( __radioPower );
+                  #endif
                 }
             }
         }
@@ -133,21 +149,29 @@ COROUTINE(radioRxRoutine) {
                 Frame f = radioFrameParser.getFrame();
                 if( f.opcode == OP_PING )
                 {
-                  activityBlink();
                   uint8_t target_device_id = f.payload[ 0 ];
                   if( target_device_id == 0xff || target_device_id == __device_id )
                   {
                     activityBlink();
-                    Frame pongFrame = createPongFrame( __device_id, __device_type );
-                    int bsize = frameToBuffer( pongFrame, buf, 32 );
-                    __radioInterface->write( buf, bsize );
+
+                    // Prepare relay states
+                    uint8_t active_relays[255];
+                    int offset = 0;
                     for( int i = 0; i < NUM_RELAYS; ++i )
                     {
                       Trigger * t = __triggers[ i ];
-                      Frame fack = createFireAckFrame( __device_id, (uint8_t)i, t->isActive() );
-                      int bsize = frameToBuffer( fack, buf, 32 );
-                      __radioInterface->write( buf, bsize );
+                      if( t->isActive() )
+                      {
+                        active_relays[ offset++ ] = i;
+                      }
                     }
+                    //
+
+                    Frame pongFrame = createRxPongFrame( __device_id, __device_type, offset, active_relays );
+
+                    int bsize = frameToBuffer( pongFrame, buf, 32 );
+                    __radioInterface->write( buf, bsize );
+
                   }
                 }
                 else if( f.opcode == OP_FIRE )
@@ -178,11 +202,6 @@ COROUTINE(triggerTickRoutine) {
       {
         Trigger * t = __triggers[ i ];
         t->tick();
-        /*
-        Frame fack = createFireAckFrame( __device_id, (uint8_t)i, t->isActive() );
-        int bsize = frameToBuffer( fack, buf, 32 );
-        __radioInterface->write( buf, bsize );
-        */
       }
       COROUTINE_DELAY(50);
     }
@@ -211,10 +230,17 @@ void setup() {
     __radioChannel = EEPROM.read(0x01);
     __radioPower = EEPROM.read(0x02);
 
+    if( __radioChannel > 127 || __radioChannel < 1 )
+      __radioChannel = 1;
+
+    if( __radioPower > 8 || __radioPower < 1 )
+      __radioPower = 8;
+
     Serial.begin(9600);
 
     #ifdef USE_HC12
-    // Nothing !
+    __radioInterface->setChannel( __radioChannel );
+    __radioInterface->setPowerLevel( __radioPower );
     #else
     Serial1.begin(9600);
     #endif

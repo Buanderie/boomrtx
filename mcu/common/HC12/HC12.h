@@ -13,6 +13,77 @@ public:
     virtual ~HC12();
     bool setOutput(HardwareSerial *output);
 
+    void enableSetMode( bool value )
+    {
+      if( value != _setMode )
+      {
+        if( !value )
+          digitalWrite(_setPin, HIGH); // SET MODE = OFF
+        else
+          digitalWrite(_setPin, LOW); // SET MODE = OFF
+        delay(100);
+        _setMode = value;
+      }
+    }
+
+    void setChannel( int value )
+    {
+      enableSetMode( true );
+      char tbuffer[ 16 ];
+      int r = snprintf(tbuffer, 1023, "AT+C%03d", 1);
+      _output->write( tbuffer, r );
+
+      delay(500);
+      while (_output->available() > 0) {}
+
+      enableSetMode( false );
+    }
+
+    void setPowerLevel( int value )
+    {
+      enableSetMode( true );
+      char tbuffer[ 16 ];
+      int r = snprintf(tbuffer, 1023, "AT+P%01d", 1);
+      _output->write( tbuffer, r );
+
+      delay(500);
+      while (_output->available() > 0) {}
+
+      enableSetMode( false );
+    }
+
+    int getChannel()
+    {
+      enableSetMode( true );
+
+      /*
+      char tbuffer[ 16 ];
+      int r = snprintf(tbuffer, 1023, "AT+P%01d", 1);
+      _output->write( tbuffer, r );
+
+      delay(500);
+      while (_output->available() > 0) {}
+      */
+
+      enableSetMode( false );
+    }
+
+    int getPowerLevel()
+    {
+      enableSetMode( true );
+
+      /*
+      char tbuffer[ 16 ];
+      int r = snprintf(tbuffer, 1023, "AT+P%01d", 1);
+      _output->write( tbuffer, r );
+
+      delay(500);
+      while (_output->available() > 0) {}
+      */
+      
+      enableSetMode( false );
+    }
+
     virtual int available()
     {
       if( _setMode )

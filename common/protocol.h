@@ -5,6 +5,7 @@ typedef enum
 {
     OP_PING = 0,
     OP_PONG,
+    OP_RX_PONG,
     OP_SET_DEVICE_ID,
     OP_GET_RADIO_CHANNEL,
     OP_SET_RADIO_CHANNEL,

@@ -65,6 +65,23 @@ Frame createPongFrame( uint8_t device_id, uint8_t device_type, uint8_t flags = 0
     return ret;
 }
 
+Frame createRxPongFrame( uint8_t device_id, uint8_t device_type, uint8_t num_active_relays, uint8_t * active_relays, uint8_t flags = 0x00 )
+{
+    Frame ret;
+    ret.flags = flags;
+    int offset = 0;
+    ret.payload[ offset++ ] = device_id;
+    ret.payload[ offset++ ] = device_type;
+    ret.payload[ offset++ ] = num_active_relays;
+    for( int i = 0; i < num_active_relays; ++i )
+    {
+      ret.payload[ offset++ ] = active_relays[i];
+    }
+    ret.payload_size = offset;
+    ret.opcode = OP_RX_PONG;
+    return ret;
+}
+
 Frame createSetDeviceIdFrame( uint8_t device_id, uint8_t flags = 0x00 )
 {
     Frame ret;

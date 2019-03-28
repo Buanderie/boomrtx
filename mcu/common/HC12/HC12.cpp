@@ -6,9 +6,7 @@ HC12::HC12(HardwareSerial *sws, uint8_t setPin, int baud )
 {
   this->setOutput(sws);
   pinMode(_setPin, OUTPUT);
-  digitalWrite(_setPin, HIGH); // SET MODE = OFF
-  delay(80);
-  _setMode = false;
+  enableSetMode( false );
   this->_output->begin(_baud);
 }
 
