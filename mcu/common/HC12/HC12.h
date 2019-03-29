@@ -21,7 +21,7 @@ public:
           digitalWrite(_setPin, HIGH); // SET MODE = OFF
         else
           digitalWrite(_setPin, LOW); // SET MODE = OFF
-        delay(100);
+        delay(200);
         _setMode = value;
       }
     }
@@ -30,11 +30,11 @@ public:
     {
       enableSetMode( true );
       char tbuffer[ 16 ];
-      int r = snprintf(tbuffer, 1023, "AT+C%03d", 1);
+      int r = snprintf(tbuffer, 16, "AT+C%03d", value);
       _output->write( tbuffer, r );
 
-      delay(500);
-      while (_output->available() > 0) {}
+      delay(150);
+      while (_output->available() > 0) { _output->readBytes( tbuffer, 16 ); }
 
       enableSetMode( false );
     }
@@ -43,11 +43,11 @@ public:
     {
       enableSetMode( true );
       char tbuffer[ 16 ];
-      int r = snprintf(tbuffer, 1023, "AT+P%01d", 1);
+      int r = snprintf(tbuffer, 16, "AT+P%01d", value);
       _output->write( tbuffer, r );
 
-      delay(500);
-      while (_output->available() > 0) {}
+      delay(150);
+      while (_output->available() > 0) { _output->readBytes( tbuffer, 16 ); }
 
       enableSetMode( false );
     }
@@ -65,6 +65,7 @@ public:
       while (_output->available() > 0) {}
       */
 
+      return 0;
       enableSetMode( false );
     }
 
@@ -80,6 +81,8 @@ public:
       delay(500);
       while (_output->available() > 0) {}
       */
+
+      return 0;
       
       enableSetMode( false );
     }
